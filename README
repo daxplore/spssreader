@@ -1,0 +1,5 @@
+A Java library used for reading SPSS .sav files.
+
+This is a fork of a Open Data Foundation project created by Pascal Heus (pheus@opendatafoundation.org). The original project can be found at: http://opendatafoundation.org/?lvl1=forge
+
+The main, planned improvement is to allow the library to read SPSS files that do not use a UTF-8 character encoding.
