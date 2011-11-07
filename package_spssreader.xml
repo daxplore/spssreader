@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="i18n" basedir="." default="package">
+
+    <target name="makejar" description="Prepare JAR">
+        <jar jarfile="bin/org.opendatafoundation.data.jar" basedir="bin">
+            <include name="org/opendatafoundation/data/**"/>
+        </jar>
+    </target> 
+    <target name="package" description="Prepare package" depends="makejar">
+        <zip destfile="org-opendatafoundation.data.zip">
+            <zipfileset dir="bin" prefix="bin" includes="*.jar">
+                <exclude name="CVS"/>
+            </zipfileset>
+            <zipfileset dir="javadoc" prefix="javadoc">
+                <exclude name="CVS"/>
+            </zipfileset>
+        </zip>
+    </target> 
+</project>
