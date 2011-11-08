@@ -28,9 +28,9 @@ License:
 	
 	<xsl:template match="/">
 		<xsl:call-template name="xml2html">
-			<div>
+			<!--<div>--><!-- daxplore: commented out due to errors in Eclipse -->
 				<xsl:with-param name="node" select="*"/>
-			</div>
+			<!--</div>-->
 		</xsl:call-template>
 	</xsl:template>
 
