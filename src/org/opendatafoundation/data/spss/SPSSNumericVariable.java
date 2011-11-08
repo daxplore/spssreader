@@ -116,7 +116,7 @@ public class SPSSNumericVariable extends SPSSVariable {
 	 */
 	public String getSPSSFormat() {
 		String formatStr = "";
-		switch(this.variableRecord.writeFormatType) {
+		switch(variableRecord.writeFormatType) {
 		case 3: // comma
 			formatStr="Comma"+getLength()+"."+getDecimals();
 			break;
@@ -209,12 +209,12 @@ public class SPSSNumericVariable extends SPSSVariable {
 		double val;
 
 		// check range
-		if(obsNumber < 0 || obsNumber > this.data.size()) {
-			throw new SPSSFileException("Invalid observation number ["+obsNumber+". Range is 1 to "+this.data.size()+"] or 0.");
+		if(obsNumber < 0 || obsNumber > data.size()) {
+			throw new SPSSFileException("Invalid observation number ["+obsNumber+". Range is 1 to "+data.size()+"] or 0.");
 		}
 		// init value to convert
-		if(obsNumber == 0) val = this.value;
-		else if(obsNumber > 0 && this.data.size()==0 )throw new SPSSFileException("No data availble");
+		if(obsNumber == 0) val = value;
+		else if(obsNumber > 0 && data.size()==0 )throw new SPSSFileException("No data availble");
 		else val = data.get(obsNumber-1);
 
 		// convert
@@ -229,7 +229,7 @@ public class SPSSNumericVariable extends SPSSVariable {
 			else if(strValue.length() < getLength()) strValue = Utils.leftPad(strValue,this.getLength()); // left pad
 			else if(strValue.length() > getLength()) { // this value is too long to fit in the allocate space
 				// for fixed format, see if we can truncate the decimals (this is the same for SPSS fixed export)
-				if(this.variableRecord.writeFormatType==5 && this.getDecimals()>0) {
+				if(variableRecord.writeFormatType==5 && getDecimals()>0) {
 					int dotPosition = strValue.lastIndexOf(".");
 					// TODO: when a value is less between 1 and -1 (0.1234), SPSS also removes the leading zero
 					if(dotPosition+2 <= getLength()) { // we can fit at least one decimal
@@ -278,21 +278,21 @@ public class SPSSNumericVariable extends SPSSVariable {
 			strValue = ".";
 		}
 		else {
-			switch(this.variableRecord.writeFormatType) {
+			switch(variableRecord.writeFormatType) {
 			case 3: // Comma
-				strFormat += "%,."+this.getDecimals()+"f";
+				strFormat += "%,."+getDecimals()+"f";
 				strValue = String.format(Locale.US,strFormat,value);
 				break;
 			case 4: // dollar
-				strFormat += "$%."+this.getDecimals()+"f";
+				strFormat += "$%."+getDecimals()+"f";
 				strValue = String.format(Locale.US,strFormat,value);
 				break;
 			case 5: // fixed format (default)
-				strFormat += "%"+this.getLength()+"."+this.getDecimals()+"f";
+				strFormat += "%"+this.getLength()+"."+getDecimals()+"f";
 				strValue = String.format(Locale.US,strFormat,value);
 				break;
 			case 17: // scientific notation
-				nDecimals = this.getDecimals();
+				nDecimals = getDecimals();
 				if(nDecimals>0) nDecimals--; // remove one decimal for the sign
 				strFormat += "% "+this.getLength()+"."+nDecimals+"E";
 				strValue = String.format(Locale.US,strFormat,value);
@@ -373,7 +373,7 @@ public class SPSSNumericVariable extends SPSSVariable {
 				strValue = String.format(Locale.US,strFormat, calendar.get(Calendar.WEEK_OF_YEAR), calendar);
 				break;
 			case 32: // Dot (use Germany locale, for some reasonm french does not display the dot thousand separator)
-				strFormat += "%,."+this.getDecimals()+"f";
+				strFormat += "%,."+getDecimals()+"f";
 				strValue = String.format(Locale.GERMANY,strFormat,value);
 				break;
 			case 33: // custom currency A
@@ -381,7 +381,7 @@ public class SPSSNumericVariable extends SPSSVariable {
 			case 35: // custom currency C
 			case 36: // custom currency D
 			case 37: // custom currency E
-				strFormat += "%"+this.getLength()+"."+this.getDecimals()+"f";
+				strFormat += "%"+this.getLength()+"."+getDecimals()+"f";
 				strValue = String.format(Locale.US,strFormat,value);
 				break;
 			case 38: // Date in dd.mm.yy or dd.mm.yyyy
@@ -397,7 +397,7 @@ public class SPSSNumericVariable extends SPSSVariable {
 				strValue = String.format(Locale.US,strFormat, calendar);
 				break;
 			default:
-				throw new SPSSFileException("Unknown write format type ["+this.variableRecord.writeFormatType+"]");
+				throw new SPSSFileException("Unknown write format type ["+variableRecord.writeFormatType+"]");
 			}
 		}
 		return(strValue);

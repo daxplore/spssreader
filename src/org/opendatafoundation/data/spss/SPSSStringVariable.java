@@ -57,10 +57,10 @@ public class SPSSStringVariable extends SPSSVariable {
 	public SPSSVariableCategory addCategory(byte[] byteValue, String label) {
 		SPSSVariableCategory cat;
 		String strValue;
-		if(this.file.charset == null){
+		if(file.charset == null){
 			strValue = SPSSUtils.byte8ToString(byteValue);
 		} else {
-			strValue = SPSSUtils.byte8ToString(byteValue, this.file.charset);
+			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
 		}
 
 		cat = categoryMap.get(strValue);
@@ -79,10 +79,10 @@ public class SPSSStringVariable extends SPSSVariable {
 	 */
 	public SPSSVariableCategory getCategory(byte[] byteValue) {
 		String strValue;
-		if(this.file.charset == null){
+		if(file.charset == null){
 			strValue = SPSSUtils.byte8ToString(byteValue);
 		} else {
-			strValue = SPSSUtils.byte8ToString(byteValue, this.file.charset);
+			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
 		}
 		return(getCategory(strValue));
 	}
@@ -99,7 +99,7 @@ public class SPSSStringVariable extends SPSSVariable {
 	 */
 	public String getSPSSFormat() {
 		// TODO: AHEXw format?
-		return("A"+this.variableRecord.writeFormatWidth);
+		return("A"+variableRecord.writeFormatWidth);
 	}
 
 	/**
@@ -111,12 +111,12 @@ public class SPSSStringVariable extends SPSSVariable {
 		String strValue;
 
 		// check range
-		if(obsNumber < 0 || obsNumber > this.data.size()) {
-			throw new SPSSFileException("Invalid observation number ["+obsNumber+". Range is 1 to "+this.data.size()+"] or 0.");
+		if(obsNumber < 0 || obsNumber > data.size()) {
+			throw new SPSSFileException("Invalid observation number ["+obsNumber+". Range is 1 to "+data.size()+"] or 0.");
 		}
 		// init value
-		if(obsNumber == 0) strValue = this.value;
-		else if(obsNumber > 0 && this.data.size()==0 )throw new SPSSFileException("No data availble");
+		if(obsNumber == 0) strValue = value;
+		else if(obsNumber > 0 && data.size()==0 )throw new SPSSFileException("No data availble");
 		else strValue=data.get(obsNumber-1);
 
 		// format output

@@ -157,7 +157,7 @@ public class SPSSRecordType2 extends SPSSAbstractRecordType {
 	 * Read the record in the SPSS file
 	 */
 	public void read(SPSSFile is) throws IOException, SPSSFileException {
-		this.file = is;
+		file = is;
 		// position in file
 		fileLocation = is.getFilePointer();
 		// record type
@@ -222,25 +222,25 @@ public class SPSSRecordType2 extends SPSSAbstractRecordType {
 			str += "\nLabel           : "+label;
 		}
 		// missing values
-		if(this.missingValueFormatCode>0) {
+		if(missingValueFormatCode>0) {
 			// 1-3 --> discrete missing value codes
-			for(int i=0; i < this.missingValueFormatCode ; i++) {
+			for(int i=0; i < missingValueFormatCode ; i++) {
 				str += "\nMissing "+i+"       :";
-				if(this.variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[i]);
+				if(variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[i]);
 				else str += (file.charset == null ? SPSSUtils.byte8ToString(missingValue[i]): SPSSUtils.byte8ToString(missingValue[i], file.charset));
 			}
 		}
-		else if(this.missingValueFormatCode <= -2) {
+		else if(missingValueFormatCode <= -2) {
 			// -2 --> range of missing value codes
 			str += "\nMissing range   : ";
-			if(this.variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[0]);
+			if(variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[0]);
 			else str += (file.charset == null ? SPSSUtils.byte8ToString(missingValue[0]): SPSSUtils.byte8ToString(missingValue[0], file.charset));
 			str += " - ";
-			if(this.variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[1]);
+			if(variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[1]);
 			else str += (file.charset == null ? SPSSUtils.byte8ToString(missingValue[1]): SPSSUtils.byte8ToString(missingValue[1], file.charset));
-			if(this.missingValueFormatCode==-3) {
+			if(missingValueFormatCode==-3) {
 				str += "\nMissing 3       : ";
-				if(this.variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[2]);
+				if(variableTypeCode==0) str += ""+SPSSUtils.byte8ToDouble(missingValue[2]);
 				else str += (file.charset == null ? SPSSUtils.byte8ToString(missingValue[2]): SPSSUtils.byte8ToString(missingValue[2], file.charset));
 			}
 		}
