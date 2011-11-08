@@ -1,8 +1,0 @@
-A Java library used for reading SPSS .sav files.
-
-This is a fork of an Open Data Foundation project created by Pascal Heus (pheus@opendatafoundation.org). The original project can be found at: http://opendatafoundation.org/?lvl1=forge
-
-The main improvement is to allow the library to read SPSS files that do not the platform's default charset.
-
-License: GNU Lesser General Public License
-
