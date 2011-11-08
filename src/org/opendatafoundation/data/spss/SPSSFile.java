@@ -39,6 +39,7 @@ import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -114,6 +115,7 @@ public class SPSSFile extends RandomAccessFile {
     long cacheStart = -1;
     long cachePointer = -1;
     long cacheEnd = -1;
+    Charset charset = null;
 
     // SPSS Metadata
     SPSSRecordType1              infoRecord; //< the SPSS type 1 record
@@ -170,7 +172,55 @@ public class SPSSFile extends RandomAccessFile {
     	this.file = new File(name);
     }
     
-
+    /**
+     * Constructor
+     * @param file
+     * @param charset
+     * @throws FileNotFoundException
+     */
+    public SPSSFile(File file, Charset charset) throws FileNotFoundException {
+        super(file,"r");
+        this.file = file;
+        this.charset = charset;
+    }
+    /**
+     * Constructor
+     * @param file
+     * @param mode
+     * @param charset
+     * @throws FileNotFoundException
+     */
+    public SPSSFile(File file, String mode, Charset charset) throws FileNotFoundException {
+        super(file,mode);
+        this.file = file;
+        this.charset = charset;
+    }
+    /**
+     * Constructor
+     * @param name
+     * @param charset
+     * @throws FileNotFoundException
+     */
+    public SPSSFile(String name, Charset charset) throws FileNotFoundException {
+        super(name,"r");
+    	this.file = new File(name);
+        this.charset = charset;
+    }
+    /**
+     * Constructor
+     * 
+     * @param name
+     * @param mode
+     * @param charset
+     * @throws FileNotFoundException
+     */
+    public SPSSFile(String name, String mode, Charset charset) throws FileNotFoundException {
+        super(name,"r");
+    	this.file = new File(name);
+        this.charset = charset;
+    }
+    
+    
     /**
      * Dumps the file data to the console (for debugging purposes)
      * 
@@ -1245,12 +1295,14 @@ public class SPSSFile extends RandomAccessFile {
                                 Map.Entry entry = (Map.Entry)it.next();
                                 SPSSVariable var = getVariable(varIndex); 
                                 // make sure the short name matches and that it's not a string continuation
-                                if(var.variableRecord.variableTypeCode!=0 && var.variableShortName.equals(entry.getKey())) {
+                                // daxplore: variableTypeCode seems to be 0 for all but the first variable (why? correct?)
+                                // daxplore: disabled check to be able to get long variable names
+                                if(/*var.variableRecord.variableTypeCode!=0 && */var.variableShortName.equalsIgnoreCase((String)entry.getKey())) {
                                     var.variableName = (String) entry.getValue();
                                 }
-                                else {
-                                	//log(var.variableShortName+"!="+entry.getKey());
-                                }
+                                /*else {
+                                	log(var.variableShortName+"!="+entry.getKey());
+                                }*/
                                 varIndex++;
                             }
                             break;
@@ -1351,7 +1403,11 @@ public class SPSSFile extends RandomAccessFile {
         String s = "";
         byte[] buffer = new byte[length];
         this.read(buffer);
-        s = new String(buffer);
+        if(this.charset != null){
+        	s = new String(buffer, this.charset);
+        } else {
+        	s = new String(buffer);
+        }
         return(s);
     }
 

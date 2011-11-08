@@ -431,7 +431,15 @@ public abstract class SPSSVariable {
 	             elem = (Element) proprietaryInfo.appendChild(doc.createElementNS(SPSSFile.DDI3_REUSABLE_NAMESPACE,"ProprietaryProperty"));
 	             elem.setAttribute("name", "MissingValue" + i);
 	             if(variableRecord.variableTypeCode==0) elem.setTextContent(""+SPSSUtils.byte8ToDouble(variableRecord.missingValue[i]));
-	             else elem.setTextContent(SPSSUtils.byte8ToString(variableRecord.missingValue[i]));
+	             else {
+	            	 String tc;
+	            	 if(this.file.charset == null){
+	            		 tc = SPSSUtils.byte8ToString(variableRecord.missingValue[i]);
+	            	 } else {
+	            		 tc = SPSSUtils.byte8ToString(variableRecord.missingValue[i], this.file.charset);
+	            	 }
+	            	 elem.setTextContent(tc);
+	             }
 	        }
         }
         if(this.displayWidth != -1) {
@@ -702,7 +710,7 @@ public abstract class SPSSVariable {
      * @return A string containing the variable short name (max 8 characters)
      */
     public String getShortName() {
-        return(this.variableName);
+        return(this.variableShortName);
     }
 
     /**
@@ -768,7 +776,13 @@ public abstract class SPSSVariable {
         if(this.variableRecord.missingValueFormatCode>0) {
             // 1-3 --> discreet missing value codes
             for(int i=0; i < this.variableRecord.missingValueFormatCode ; i++) {
-                if(str.compareToIgnoreCase(SPSSUtils.byte8ToString(this.variableRecord.missingValue[i]))==0) {
+            	String strcmp;
+            	if(this.file.charset == null){
+            		strcmp = SPSSUtils.byte8ToString(this.variableRecord.missingValue[i]);
+            	} else {
+            		strcmp = SPSSUtils.byte8ToString(this.variableRecord.missingValue[i], this.file.charset);
+            	}
+                if(str.compareToIgnoreCase(strcmp) == 0) {
                     rc=true;
                     break;
                 }

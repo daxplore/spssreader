@@ -29,6 +29,7 @@ package org.opendatafoundation.data.spss;
  * 
  */
 
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -65,7 +66,21 @@ public class SPSSUtils {
      * @return converted value as String
      */
     public static String byte8ToString(byte[] buffer) {
-        String str = new String(buffer).replaceAll("\\s+$", "");
+        String str;
+		str = new String(buffer).replaceAll("\\s+$", "");
+        return(str);
+    }
+    
+    /**
+     * Converts a 8-byte value into a String with a specific encoding
+     * 
+     * @param buffer
+     * @param charset
+     * @return converted value as String
+     */
+    public static String byte8ToString(byte[] buffer, Charset charset) {
+        String str;
+		str = new String(buffer, charset).replaceAll("\\s+$", "");
         return(str);
     }
     

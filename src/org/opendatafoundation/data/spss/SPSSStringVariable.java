@@ -56,7 +56,13 @@ public class SPSSStringVariable extends SPSSVariable {
      */
     public SPSSVariableCategory addCategory(byte[] byteValue, String label) {
         SPSSVariableCategory cat;
-        String strValue = SPSSUtils.byte8ToString(byteValue);
+        String strValue;
+        if(this.file.charset == null){
+        	strValue = SPSSUtils.byte8ToString(byteValue);
+        } else {
+        	strValue = SPSSUtils.byte8ToString(byteValue, this.file.charset);
+        }
+        
         cat = categoryMap.get(strValue);
         if(cat==null) {
             // create and add to the map
@@ -72,7 +78,12 @@ public class SPSSStringVariable extends SPSSVariable {
      * Gets a category for this variable based on a byte[8] value
      */
     public SPSSVariableCategory getCategory(byte[] byteValue) {
-        String strValue = SPSSUtils.byte8ToString(byteValue);
+        String strValue;
+        if(this.file.charset == null){
+        	strValue = SPSSUtils.byte8ToString(byteValue);
+        } else {
+        	strValue = SPSSUtils.byte8ToString(byteValue, this.file.charset);
+        }
         return(getCategory(strValue));
     }
 
