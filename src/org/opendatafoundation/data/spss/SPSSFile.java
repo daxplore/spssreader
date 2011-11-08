@@ -101,7 +101,7 @@ public class SPSSFile extends RandomAccessFile {
     public String variableIDPrefix              = "V";          //< String prefixing variable r:ID to create valid identifiers within scheme (number only not allowed)
 
     // Log
-    Boolean logFlag = true; //< Turn logging on/off 
+    public Boolean logFlag = true; //< Turn logging on/off 
     public File logFile;    //< Optional logfile. If null, log messages are sent to the console
     Writer logWriter;       //< logfile writer
     private long start;     //< Used for timing operations
