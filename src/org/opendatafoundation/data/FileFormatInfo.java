@@ -36,17 +36,25 @@ package org.opendatafoundation.data;
  */
 public class FileFormatInfo {
 	/** Export compatibility mode */
-	public static enum Compatibility {NATIVE, GENERIC};
-	/** Export format */
-	public static enum Format {ASCII, SPSS, SAS, STATA};
-	/** Ascii format */
-	public static enum ASCIIFormat {FIXED,DELIMITED,CSV};
+	public static enum Compatibility {
+		NATIVE, GENERIC
+	};
 
-	public Compatibility compatibility    = Compatibility.NATIVE;
-	public Format        format           = Format.ASCII;
-	public ASCIIFormat   asciiFormat      = ASCIIFormat.FIXED;
-	public char          asciiDelimiter   ='\t';
-	public boolean       namesOnFirstLine = true;
+	/** Export format */
+	public static enum Format {
+		ASCII, SPSS, SAS, STATA
+	};
+
+	/** Ascii format */
+	public static enum ASCIIFormat {
+		FIXED, DELIMITED, CSV
+	};
+
+	public Compatibility compatibility = Compatibility.NATIVE;
+	public Format format = Format.ASCII;
+	public ASCIIFormat asciiFormat = ASCIIFormat.FIXED;
+	public char asciiDelimiter = '\t';
+	public boolean namesOnFirstLine = true;
 
 	public FileFormatInfo() {
 	}
@@ -58,18 +66,14 @@ public class FileFormatInfo {
 	public String toString() {
 		String str;
 		str = format.name();
-		if(format==Format.ASCII) {
-			str += "_"+asciiFormat.toString();
+		if (format == Format.ASCII) {
+			str += "_" + asciiFormat.toString();
 			/*
-            if(asciiFormat==ASCIIFormat.DELIMITED) {
-                switch(asciiDelimiter) {
-                case '\t': str += ".TAB";
-                default: str += "."+ (int) asciiDelimiter;
-                }
-            }
+			 * if(asciiFormat==ASCIIFormat.DELIMITED) { switch(asciiDelimiter) { case '\t': str += ".TAB"; default: str += "."+ (int) asciiDelimiter; } }
 			 */
-			if(compatibility!=Compatibility.GENERIC) str += "_"+compatibility.toString();
+			if (compatibility != Compatibility.GENERIC)
+				str += "_" + compatibility.toString();
 		}
-		return(str);
+		return (str);
 	}
 }

@@ -51,27 +51,28 @@ public class SPSSStringVariable extends SPSSVariable {
 		type = VariableType.STRING;
 		data = new ArrayList<String>();
 	}
+
 	/**
 	 * Adds a category to the variable
 	 */
 	public SPSSVariableCategory addCategory(byte[] byteValue, String label) {
 		SPSSVariableCategory cat;
 		String strValue;
-		if(file.charset == null){
+		if (file.charset == null) {
 			strValue = SPSSUtils.byte8ToString(byteValue);
 		} else {
 			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
 		}
 
 		cat = categoryMap.get(strValue);
-		if(cat==null) {
+		if (cat == null) {
 			// create and add to the map
 			cat = new SPSSVariableCategory();
 			categoryMap.put(strValue, cat);
 		}
 		cat.strValue = strValue;
 		cat.label = label;
-		return(cat);
+		return (cat);
 	}
 
 	/**
@@ -79,19 +80,19 @@ public class SPSSStringVariable extends SPSSVariable {
 	 */
 	public SPSSVariableCategory getCategory(byte[] byteValue) {
 		String strValue;
-		if(file.charset == null){
+		if (file.charset == null) {
 			strValue = SPSSUtils.byte8ToString(byteValue);
 		} else {
 			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
 		}
-		return(getCategory(strValue));
+		return (getCategory(strValue));
 	}
 
 	/**
 	 * Gets a category for this variable based on a double value
 	 */
 	public SPSSVariableCategory getCategory(String strValue) {
-		return(categoryMap.get(strValue));
+		return (categoryMap.get(strValue));
 	}
 
 	/**
@@ -99,11 +100,12 @@ public class SPSSStringVariable extends SPSSVariable {
 	 */
 	public String getSPSSFormat() {
 		// TODO: AHEXw format?
-		return("A"+variableRecord.writeFormatWidth);
+		return ("A" + variableRecord.writeFormatWidth);
 	}
 
 	/**
 	 * Returns an observation value as a string
+	 * 
 	 * @throws SPSSFileException
 	 * 
 	 */
@@ -111,32 +113,34 @@ public class SPSSStringVariable extends SPSSVariable {
 		String strValue;
 
 		// check range
-		if(obsNumber < 0 || obsNumber > data.size()) {
-			throw new SPSSFileException("Invalid observation number ["+obsNumber+". Range is 1 to "+data.size()+"] or 0.");
+		if (obsNumber < 0 || obsNumber > data.size()) {
+			throw new SPSSFileException("Invalid observation number [" + obsNumber + ". Range is 1 to " + data.size() + "] or 0.");
 		}
 		// init value
-		if(obsNumber == 0) strValue = value;
-		else if(obsNumber > 0 && data.size()==0 )throw new SPSSFileException("No data availble");
-		else strValue=data.get(obsNumber-1);
+		if (obsNumber == 0)
+			strValue = value;
+		else if (obsNumber > 0 && data.size() == 0)
+			throw new SPSSFileException("No data availble");
+		else
+			strValue = data.get(obsNumber - 1);
 
 		// format output
-		if(dataFormat.format==FileFormatInfo.Format.ASCII) {
-			if(dataFormat.asciiFormat==FileFormatInfo.ASCIIFormat.FIXED) { // padding
+		if (dataFormat.format == FileFormatInfo.Format.ASCII) {
+			if (dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.FIXED) { // padding
 				strValue += Utils.leftPad("", this.getLength() - strValue.length());
-			}
-			else if(dataFormat.asciiFormat==FileFormatInfo.ASCIIFormat.CSV) {
+			} else if (dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.CSV) {
 				// see http://en.wikipedia.org/wiki/Comma-separated_values
 				// double the double-quote
-				if(strValue.contains("\"")) {
+				if (strValue.contains("\"")) {
 					strValue = strValue.replaceAll("\"", "\"\"");
 				}
 				// surround by double-quote if contains comma, double-quote, line break
-				if(strValue.contains(",") || strValue.contains("\"") || strValue.contains("\n")) {
-					strValue = "\""+strValue+"\"";
+				if (strValue.contains(",") || strValue.contains("\"") || strValue.contains("\n")) {
+					strValue = "\"" + strValue + "\"";
 				}
 			}
 
 		}
-		return(strValue);
+		return (strValue);
 	}
 }

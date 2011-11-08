@@ -40,14 +40,15 @@ import java.util.List;
  */
 public class SPSSRecordType7Subtype11 extends SPSSAbstractRecordType {
 	// type 7
-	int     recordTypeCode;
-	int     recordSubtypeCode;
-	int     dataElementLength;
-	int     numberOfDataElements;
+	int recordTypeCode;
+	int recordSubtypeCode;
+	int dataElementLength;
+	int numberOfDataElements;
 
 	// subtype 11
-	List<VariableDisplayParams> variableDisplayParams; /** a collection of VariableDisplayParams (one for each variable) */
+	List<VariableDisplayParams> variableDisplayParams;
 
+	/** a collection of VariableDisplayParams (one for each variable) */
 
 	public void read(SPSSFile is) throws IOException, SPSSFileException {
 		// position in file
@@ -55,45 +56,49 @@ public class SPSSRecordType7Subtype11 extends SPSSAbstractRecordType {
 
 		// record type
 		recordTypeCode = is.readSPSSInt();
-		if(recordTypeCode!=7) throw new SPSSFileException("Error reading record type 7 subtype 11: bad record type ["+recordTypeCode+"]. Expecting Record Type 7.");
+		if (recordTypeCode != 7)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
 
 		// subtype
 		recordSubtypeCode = is.readSPSSInt();
-		if(recordSubtypeCode!=11) throw new SPSSFileException("Error reading record type 7 subtype 11: bad subrecord type ["+recordSubtypeCode+"]. Expecting Record Subtype 11.");
+		if (recordSubtypeCode != 11)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: bad subrecord type [" + recordSubtypeCode + "]. Expecting Record Subtype 11.");
 
 		// data elements
 		dataElementLength = is.readSPSSInt();
-		if(dataElementLength!=4) throw new SPSSFileException("Error reading record type 7 subtype 11: bad data element length ["+dataElementLength+"]. Expecting 4.");
+		if (dataElementLength != 4)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: bad data element length [" + dataElementLength + "]. Expecting 4.");
 
 		numberOfDataElements = is.readSPSSInt();
 		int n_variables = numberOfDataElements / 3;
-		if( (numberOfDataElements % 3)!=0 ) throw new SPSSFileException("Error reading record type 7 subtype 11: number of data elements ["+dataElementLength+"] is not a multiple of 3.");
+		if ((numberOfDataElements % 3) != 0)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: number of data elements [" + dataElementLength + "] is not a multiple of 3.");
 
 		// read display parameters for eeach variable
 		variableDisplayParams = new ArrayList<VariableDisplayParams>();
-		for(int i=0 ; i<n_variables; i++) {
+		for (int i = 0; i < n_variables; i++) {
 			VariableDisplayParams params = new VariableDisplayParams();
 			params.measure = is.readSPSSInt();
-			params.width= is.readSPSSInt();
+			params.width = is.readSPSSInt();
 			params.alignment = is.readSPSSInt();
 			variableDisplayParams.add(params);
 		}
 	}
 
 	public String toString() {
-		String str="";
+		String str = "";
 		str += "\nRECORD TYPE 7 SUBTYPE 11 - VARIABLE DISPLAY PARAMETERS";
-		str += "\nLocation        : "+fileLocation;
-		str += "\nRecord Type     : "+recordTypeCode;
-		str += "\nRecord Subtype  : "+recordSubtypeCode;
-		str += "\nData elements   : "+numberOfDataElements;
-		str += "\nElement length  : "+dataElementLength;
-		int var_index=0;
-		for (VariableDisplayParams params: variableDisplayParams) {
+		str += "\nLocation        : " + fileLocation;
+		str += "\nRecord Type     : " + recordTypeCode;
+		str += "\nRecord Subtype  : " + recordSubtypeCode;
+		str += "\nData elements   : " + numberOfDataElements;
+		str += "\nElement length  : " + dataElementLength;
+		int var_index = 0;
+		for (VariableDisplayParams params : variableDisplayParams) {
 			var_index++;
-			str += "\nDisplay params  : Var "+var_index+" Measure="+params.measure+" Width="+params.width+" Alignment="+params.alignment;
+			str += "\nDisplay params  : Var " + var_index + " Measure=" + params.measure + " Width=" + params.width + " Alignment=" + params.alignment;
 		}
-		return(str);
+		return (str);
 	}
 
 	public class VariableDisplayParams {

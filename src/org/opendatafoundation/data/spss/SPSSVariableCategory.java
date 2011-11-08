@@ -34,10 +34,10 @@ package org.opendatafoundation.data.spss;
  * 
  */
 public class SPSSVariableCategory {
-	public double value= Double.NaN; //< A numeric value
-	public String strValue="";       //< A string value
-	public String label="";             //< The category label
-	boolean isMissing = false;       //< Indicates if this should be treated as a missing value
-	long freq=0;                     // The category frequency (not implemented)
-	long wgtFreq=0;                  // The category weighted frequency (not implemented)
+	public double value = Double.NaN; // < A numeric value
+	public String strValue = ""; // < A string value
+	public String label = ""; // < The category label
+	boolean isMissing = false; // < Indicates if this should be treated as a missing value
+	long freq = 0; // The category frequency (not implemented)
+	long wgtFreq = 0; // The category weighted frequency (not implemented)
 }

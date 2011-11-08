@@ -42,11 +42,11 @@ import java.util.StringTokenizer;
  */
 public class SPSSRecordType7Subtype13 extends SPSSAbstractRecordType {
 	// type 7
-	int     recordTypeCode;
-	int     recordSubtypeCode;
-	int     dataElementLength;
-	int     numberOfDataElements;
-	Map<String,String> nameMap;
+	int recordTypeCode;
+	int recordSubtypeCode;
+	int dataElementLength;
+	int numberOfDataElements;
+	Map<String, String> nameMap;
 
 	// subtype 13
 	String longNamesStr;
@@ -57,46 +57,49 @@ public class SPSSRecordType7Subtype13 extends SPSSAbstractRecordType {
 
 		// record type
 		recordTypeCode = is.readSPSSInt();
-		if(recordTypeCode!=7) throw new SPSSFileException("Error reading record type 7 subtype 11: bad record type ["+recordTypeCode+"]. Expecting Record Type 7.");
+		if (recordTypeCode != 7)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
 
 		// subtype
 		recordSubtypeCode = is.readSPSSInt();
-		if(recordSubtypeCode!=13) throw new SPSSFileException("Error reading record type 7 subtype 13: bad subrecord type ["+recordSubtypeCode+"]. Expecting Record Subtype 13.");
+		if (recordSubtypeCode != 13)
+			throw new SPSSFileException("Error reading record type 7 subtype 13: bad subrecord type [" + recordSubtypeCode + "]. Expecting Record Subtype 13.");
 
 		// data elements
 		dataElementLength = is.readSPSSInt();
-		if(dataElementLength!=1) throw new SPSSFileException("Error reading record type 7 subtype 11: bad data element length ["+dataElementLength+"]. Expecting 1.");
+		if (dataElementLength != 1)
+			throw new SPSSFileException("Error reading record type 7 subtype 11: bad data element length [" + dataElementLength + "]. Expecting 1.");
 		numberOfDataElements = is.readSPSSInt();
 
 		// read the long names String
 		longNamesStr = is.readSPSSString(numberOfDataElements);
 
 		// load names (separated by tabs)
-		nameMap = new LinkedHashMap<String,String>();
-		StringTokenizer st1 = new StringTokenizer(longNamesStr,"\t");
+		nameMap = new LinkedHashMap<String, String>();
+		StringTokenizer st1 = new StringTokenizer(longNamesStr, "\t");
 		while (st1.hasMoreTokens()) {
-			StringTokenizer st2 = new StringTokenizer(st1.nextToken(),"=");
-			if(st2.countTokens()>=2) {
+			StringTokenizer st2 = new StringTokenizer(st1.nextToken(), "=");
+			if (st2.countTokens() >= 2) {
 				nameMap.put(st2.nextToken(), st2.nextToken());
 			}
 		}
 	}
 
 	public String toString() {
-		String str="";
+		String str = "";
 		str += "\nRECORD TYPE 7 SUBTYPE 13 - LONG VARIABLE NAMES";
-		str += "\nLocation        : "+fileLocation;
-		str += "\nRecord Type     : "+recordTypeCode;
-		str += "\nRecord Subtype  : "+recordSubtypeCode;
-		str += "\nData elements   : "+numberOfDataElements;
-		str += "\nElement length  : "+dataElementLength;
-		str += "\nLong Names      : "+longNamesStr;
+		str += "\nLocation        : " + fileLocation;
+		str += "\nRecord Type     : " + recordTypeCode;
+		str += "\nRecord Subtype  : " + recordSubtypeCode;
+		str += "\nData elements   : " + numberOfDataElements;
+		str += "\nElement length  : " + dataElementLength;
+		str += "\nLong Names      : " + longNamesStr;
 		Iterator it = nameMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry)it.next();
-			str += "\n"+(entry.getKey() + " = " + entry.getValue());
+			Map.Entry entry = (Map.Entry) it.next();
+			str += "\n" + (entry.getKey() + " = " + entry.getValue());
 		}
-		return(str);
+		return (str);
 	}
 
 	public class VariableDisplayParams {

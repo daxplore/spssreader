@@ -33,19 +33,19 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * SPSS Record Type 7 Subtype 5 - Variable sets information
- * Added in SPSS release 5.0
+ * SPSS Record Type 7 Subtype 5 - Variable sets information Added in SPSS release 5.0
  * 
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSRecordType7Subtype5 extends SPSSAbstractRecordType {
 	// type 7
-	int     recordTypeCode;
-	int     recordSubtypeCode;
-	int     dataElementLength;
-	int     numberOfDataElements;
+	int recordTypeCode;
+	int recordSubtypeCode;
+	int dataElementLength;
+	int numberOfDataElements;
 	// subtype 5
-	String variableSets; /** a string containing all variable sets in the format <set name>=<comma separated list of variables */
+	String variableSets;
+	/** a string containing all variable sets in the format <set name>=<comma separated list of variables */
 
 	List<byte[]> dataElement;
 
@@ -55,15 +55,18 @@ public class SPSSRecordType7Subtype5 extends SPSSAbstractRecordType {
 
 		// record type
 		recordTypeCode = is.readSPSSInt();
-		if(recordTypeCode!=7) throw new SPSSFileException("Error reading record type 7 subtype 5: bad record type ["+recordTypeCode+"]. Expecting Record Type 7.");
+		if (recordTypeCode != 7)
+			throw new SPSSFileException("Error reading record type 7 subtype 5: bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
 
 		// subtype
 		recordSubtypeCode = is.readSPSSInt();
-		if(recordSubtypeCode!=5) throw new SPSSFileException("Error reading record type 7 subtype 5: bad subrecord type ["+recordSubtypeCode+"]. Expecting Record Subtype 5.");
+		if (recordSubtypeCode != 5)
+			throw new SPSSFileException("Error reading record type 7 subtype 5: bad subrecord type [" + recordSubtypeCode + "]. Expecting Record Subtype 5.");
 
 		// data elements
 		dataElementLength = is.readSPSSInt();
-		if(dataElementLength!=1) throw new SPSSFileException("Error reading record type 7 subtype 3: bad data element length ["+dataElementLength+"]. Expecting 1.");
+		if (dataElementLength != 1)
+			throw new SPSSFileException("Error reading record type 7 subtype 3: bad data element length [" + dataElementLength + "]. Expecting 1.");
 
 		numberOfDataElements = is.readSPSSInt();
 
@@ -71,15 +74,15 @@ public class SPSSRecordType7Subtype5 extends SPSSAbstractRecordType {
 	}
 
 	public String toString() {
-		String str="";
+		String str = "";
 		str += "\nRECORD TYPE 7 SUBTYPE 5 - VARIABLE SETS INFORMATION";
-		str += "\nLocation        : "+fileLocation;
-		str += "\nRecord Type     : "+recordTypeCode;
-		str += "\nRecord Subtype  : "+recordSubtypeCode;
-		str += "\nData elements   : "+numberOfDataElements;
-		str += "\nElement length  : "+dataElementLength;
-		str += "\nVariable sets   :\n "+variableSets;
-		return(str);
+		str += "\nLocation        : " + fileLocation;
+		str += "\nRecord Type     : " + recordTypeCode;
+		str += "\nRecord Subtype  : " + recordSubtypeCode;
+		str += "\nData elements   : " + numberOfDataElements;
+		str += "\nElement length  : " + dataElementLength;
+		str += "\nVariable sets   :\n " + variableSets;
+		return (str);
 	}
 
 }

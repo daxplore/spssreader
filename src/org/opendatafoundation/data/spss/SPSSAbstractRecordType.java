@@ -37,8 +37,10 @@ import java.io.IOException;
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public abstract class SPSSAbstractRecordType {
-	long   fileLocation;
+	long fileLocation;
+
 	public abstract void read(SPSSFile is) throws IOException, SPSSFileException;
+
 	public abstract String toString();
 
 }

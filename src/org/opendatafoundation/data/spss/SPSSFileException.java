@@ -43,6 +43,6 @@ public class SPSSFileException extends Exception {
 
 	public SPSSFileException(String s) {
 		super(s);
-		System.out.println(this.getClass().getName()+"->"+s);
+		System.out.println(this.getClass().getName() + "->" + s);
 	}
 }

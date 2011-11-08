@@ -51,13 +51,13 @@ import org.w3c.dom.Node;
  * Collection of utility functions
  * 
  * @author Pascal Heus (pheus@opendatafoundation.org)
- *
+ * 
  */
 public class Utils {
 
-
 	/**
 	 * Converts an w3c.dom.Node into a String
+	 * 
 	 * @param node
 	 * @return The DOM as a String
 	 * @throws TransformerFactoryConfigurationError
@@ -67,13 +67,14 @@ public class Utils {
 	public static String DOM2String(Node node) throws TransformerException, TransformerFactoryConfigurationError {
 		TransformerFactory transFactory = TransformerFactory.newInstance();
 		StringWriter writer = new StringWriter();
-		transFactory.newTransformer().transform(new DOMSource(node),new StreamResult(writer));
+		transFactory.newTransformer().transform(new DOMSource(node), new StreamResult(writer));
 		String result = writer.getBuffer().toString();
-		return(result);
+		return (result);
 	}
 
 	/**
 	 * Converts an w3c.dom.Node into a color syntax HTML
+	 * 
 	 * @param node
 	 * @return The HTML as a String
 	 * @throws TransformerException
@@ -85,31 +86,34 @@ public class Utils {
 		Transformer transformer = transFactory.newTransformer(xsltSource);
 		StreamResult result = new StreamResult(System.out);
 		transformer.transform(new DOMSource(node), result);
-		return(writer.getBuffer().toString());
+		return (writer.getBuffer().toString());
 	}
 
 	/**
 	 * Pads a string left with spaces
+	 * 
 	 * @param str
 	 * @return the padded string
 	 */
 	public static String leftPad(String str, int length) {
-		return(leftPad(str,length,' '));
+		return (leftPad(str, length, ' '));
 	}
 
 	/**
 	 * Pads a string left with specified character
+	 * 
 	 * @param str
 	 * @return the padded string
 	 */
 	public static String leftPad(String str, int length, char ch) {
-		int padding = length-str.length();
-		if(padding>0) {
-			char [] buf = new char[padding];
-			for (int i = 0; i < padding; i++) buf[i] = ch;
-			return(new String(buf) + str);
-		}
-		else return(str);
+		int padding = length - str.length();
+		if (padding > 0) {
+			char[] buf = new char[padding];
+			for (int i = 0; i < padding; i++)
+				buf[i] = ch;
+			return (new String(buf) + str);
+		} else
+			return (str);
 	}
 
 	/**
@@ -159,6 +163,7 @@ public class Utils {
 
 	/**
 	 * Adds id related attributes to DDI Identifiable element
+	 * 
 	 * @param e
 	 * @param id
 	 */
@@ -169,6 +174,7 @@ public class Utils {
 
 	/**
 	 * Adds id related attributes to DDI Maintainable element
+	 * 
 	 * @param e
 	 * @param id
 	 */
@@ -179,6 +185,7 @@ public class Utils {
 
 	/**
 	 * Adds id related attributes to DDI Versionable element
+	 * 
 	 * @param e
 	 * @param id
 	 */
