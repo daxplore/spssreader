@@ -45,7 +45,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -384,6 +386,74 @@ public class SPSSFile extends RandomAccessFile {
 		return (elapsed);
 	}
 
+	/**
+	 * @throws SPSSFileException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * 
+	 */
+	public Iterator<Map<String, SPSSVariable>> getDataIterator() throws FileNotFoundException, IOException, SPSSFileException{
+		if (!isMetadataLoaded)
+			loadMetadata();
+		Iterator<Map<String, SPSSVariable>> iterator = new Iterator<Map<String,SPSSVariable>>() {
+			int numberOfCases = infoRecord.numberOfCases;
+			int currentCase = 0;
+			Set<Integer> varkeys = variableMap.keySet();
+			long currentPosition = dataStartPosition;
+			byte currentClusterIndex = 8;
+			byte[] cluster = SPSSDataRecord.cluster.clone();
+			@Override
+			public boolean hasNext() {
+				return currentCase < numberOfCases;
+			}
+
+			@Override
+			public Map<String,SPSSVariable> next() {
+				Map<String, SPSSVariable> dataMap = new LinkedHashMap<String, SPSSVariable>();
+				Iterator<Integer> varIterator = varkeys.iterator();
+				currentCase++;
+				SPSSDataRecord data;
+				try{
+					seek(currentPosition);
+					SPSSDataRecord.clusterIndex = currentClusterIndex;
+					SPSSDataRecord.cluster = cluster.clone();
+					data = new SPSSDataRecord();
+					data.read(SPSSFile.this,true);
+					while(varIterator.hasNext()){
+						SPSSVariable var = variableMap.get(varIterator.next());
+						/*Object val;
+						if(var instanceof SPSSNumericVariable){
+							val = ((SPSSNumericVariable)var).value;
+						} else if( var instanceof SPSSStringVariable){
+							val = ((SPSSStringVariable)var).value;
+						} else {
+							return null;
+						}*/
+						dataMap.put(var.variableShortName, var);
+						
+					}
+					currentPosition = SPSSFile.this.getFilePointer();
+					currentClusterIndex = SPSSDataRecord.clusterIndex;
+					cluster = SPSSDataRecord.cluster.clone();
+				} catch(IOException e){
+					return null;
+				} catch (SPSSFileException e) {
+					return null;
+				}
+				return dataMap;
+
+			}
+
+			@Override
+			public void remove() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		
+		return iterator;
+	}
+	
 	/**
 	 * Determines if the data section of the file is compressed
 	 * 
