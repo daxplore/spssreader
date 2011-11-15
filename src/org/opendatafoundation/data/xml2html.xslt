@@ -21,16 +21,16 @@ License:
 -->
 <xsl:stylesheet version="1.0"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xsl="http://www.w3.org/TR/xslt"
 	>
 	
 	<xsl:output method="html" encoding="UTF-8"/>
 	
 	<xsl:template match="/">
 		<xsl:call-template name="xml2html">
-			<!--<div>--><!-- daxplore: commented out due to errors in Eclipse -->
+			<div>
 				<xsl:with-param name="node" select="*"/>
-			<!--</div>-->
+			</div>
 		</xsl:call-template>
 	</xsl:template>
 
