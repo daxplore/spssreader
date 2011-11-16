@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Data
+Bundle-SymbolicName: org.opendatafoundation.data
+Bundle-Version: 1.0.1
+Export-Package: org.opendatafoundation.data,
+ org.opendatafoundation.data.spss
