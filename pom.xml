@@ -15,7 +15,13 @@
 
     <junit.version>4.9</junit.version>
   </properties>
-
+  
+  <scm>
+    <connection>scm:git:git://github.com/obiba/spssreader.git</connection>
+    <developerConnection>scm:git:https://github.com/obiba/spssreader.git</developerConnection>
+    <url>https://github.com/obiba/spssreader</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <dependencies>
     <dependency>
