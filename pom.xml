@@ -8,18 +8,20 @@
   <name>spssreader</name>
   <url>http://maven.apache.org</url>
 
-<properties>
-  <maven.compiler.target>1.6</maven.compiler.target>
-  <maven.compiler.source>1.6</maven.compiler.source>
-  <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-</properties>
+  <properties>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+
+    <junit.version>4.9</junit.version>
+  </properties>
 
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
