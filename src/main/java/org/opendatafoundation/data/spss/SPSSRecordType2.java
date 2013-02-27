@@ -297,6 +297,13 @@ public class SPSSRecordType2 extends SPSSAbstractRecordType {
 		return (label);
 	}
 
+  /**
+   * Return the write format type
+   */
+  public int getWriteFormatType() {
+    return writeFormatType;
+  }
+
 	/**
 	 * Read the record in the SPSS file
 	 */

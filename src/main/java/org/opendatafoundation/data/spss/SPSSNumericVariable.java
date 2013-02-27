@@ -66,7 +66,15 @@ public class SPSSNumericVariable extends SPSSVariable {
 		type = VariableType.NUMERIC;
 	}
 
-	/**
+  /**
+   * @return
+   */
+  @Override
+  public int getNumberOfObservation() {
+    return data.size();
+  }
+
+  /**
 	 * Adds a category to the variable based on a byte[8] value
 	 * 
 	 * @throws SPSSFileException

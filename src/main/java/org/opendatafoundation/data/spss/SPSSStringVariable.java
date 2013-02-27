@@ -52,6 +52,11 @@ public class SPSSStringVariable extends SPSSVariable {
 		data = new ArrayList<String>();
 	}
 
+  @Override
+  public int getNumberOfObservation() {
+    return data.size();
+  }
+
 	/**
 	 * Adds a category to the variable
 	 */

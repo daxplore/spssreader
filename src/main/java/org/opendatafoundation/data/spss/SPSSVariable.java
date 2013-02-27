@@ -111,6 +111,8 @@ public abstract class SPSSVariable {
 	 */
 	public abstract SPSSVariableCategory getCategory(byte[] byteValue) throws SPSSFileException;
 
+  public abstract int getNumberOfObservation();
+
 	/**
 	 * Generates a DDI 2 <var> element for this variable based on the SPSS data format.
 	 * 
@@ -726,6 +728,13 @@ public abstract class SPSSVariable {
 	 */
 	public String getName() {
 		return (variableName);
+	}
+
+	/**
+	 * @return The variable number in the dataset (1-based index, 0 means not set)
+	 */
+	public int getNumber() {
+		return variableNumber;
 	}
 
 	/**
