@@ -1131,6 +1131,8 @@ public class SPSSFile extends RandomAccessFile {
 			throw new SPSSFileException("Error: data location pointer not initialized.");
 
 		}
+
+		SPSSDataRecord.clusterIndex = 8; // must reset static member of SPSSDataRecord as well
 		SPSSDataRecord data = new SPSSDataRecord();
 		seek(dataStartPosition);
 		for (int i = 0; i < infoRecord.numberOfCases; i++) {
