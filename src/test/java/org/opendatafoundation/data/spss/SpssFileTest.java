@@ -2,12 +2,12 @@ package org.opendatafoundation.data.spss;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import org.junit.Test;
-import org.opendatafoundation.data.FileFormatInfo;
 
 import junit.framework.Assert;
+
+import static org.junit.Assert.assertEquals;
 
 public class SpssFileTest
 {
@@ -16,20 +16,14 @@ public class SpssFileTest
   public void loadExistingFileTest()
   {
     try {
-      SPSSFile spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/DatabaseTest.sav"));
+      new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/DatabaseTest.sav"));
     } catch(FileNotFoundException e) {
     }
   }
 
-  @Test
-  public void loadNonExistingFileTest()
-  {
-    try {
-      SPSSFile spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss"));
-      Assert.fail();
-    } catch(FileNotFoundException e) {
-      Assert.assertTrue(true);
-    }
+  @Test(expected = FileNotFoundException.class)
+  public void loadNonExistingFileTest() throws FileNotFoundException {
+      new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss"));
   }
 
   @Test
@@ -37,25 +31,39 @@ public class SpssFileTest
     try {
       SPSSFile spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/DatabaseTest.sav"));
       spssFile.logFlag = false;
-
       spssFile.loadMetadata();
       spssFile.loadData();
 
-
       SPSSVariable variable = spssFile.getVariable(0);
-      for (int i = 1; i <= variable.getNumberOfObservation(); i++) {
-        System.out.print("SPSS:  " + variable.getValueAsString(i, new FileFormatInfo(FileFormatInfo.Format.SPSS)));
-        System.out.print("\tASCII: " + variable.getValueAsString(i, new FileFormatInfo(FileFormatInfo.Format.ASCII)));
-        System.out.println("\tSTATA: " + variable.getValueAsString(i, new FileFormatInfo(FileFormatInfo.Format.STATA)));
-      }
-
-    } catch(SPSSFileException e) {
-      e.printStackTrace();
-    } catch(FileNotFoundException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    } catch(IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      assertEquals(variable.getNumberOfObservations(), 200);
+    } catch(Exception e) {
+      Assert.fail();
     }
   }
+
+  @Test
+  public void testReadingStringVariableLabels() {
+    try {
+      SPSSFile spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/StringCategories.sav"));
+      spssFile.loadMetadata();
+      SPSSVariable variable = spssFile.getVariable(1);
+      assertEquals(variable.getName(), "var1");
+      assertEquals(variable.categoryMap.size(), 4);
+      SPSSVariableCategory category = variable.getCategory("a".getBytes());
+      assertEquals(category.strValue, "a");
+      assertEquals(category.label, "Label A");
+      SPSSVariable variable1 = spssFile.getVariable(2);
+      assertEquals(variable1.getName(), "var2");
+      assertEquals(variable1.categoryMap.size(), 2);
+      SPSSVariableCategory category1 = variable1.getCategory("string string1".getBytes());
+      assertEquals(category1.strValue, "string string1");
+      assertEquals(category1.label, "This is a long string 1");
+
+    } catch(Exception e) {
+      Assert.fail();
+    }
+
+  }
+
 
 }

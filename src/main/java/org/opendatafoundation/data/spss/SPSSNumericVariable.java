@@ -70,7 +70,7 @@ public class SPSSNumericVariable extends SPSSVariable {
    * @return
    */
   @Override
-  public int getNumberOfObservation() {
+  public int getNumberOfObservations() {
     return data.size();
   }
 

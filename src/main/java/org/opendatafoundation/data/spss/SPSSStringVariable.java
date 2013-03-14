@@ -53,7 +53,7 @@ public class SPSSStringVariable extends SPSSVariable {
 	}
 
   @Override
-  public int getNumberOfObservation() {
+  public int getNumberOfObservations() {
     return data.size();
   }
 

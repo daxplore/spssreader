@@ -111,7 +111,7 @@ public abstract class SPSSVariable {
 	 */
 	public abstract SPSSVariableCategory getCategory(byte[] byteValue) throws SPSSFileException;
 
-  public abstract int getNumberOfObservation();
+  public abstract int getNumberOfObservations();
 
 	/**
 	 * Generates a DDI 2 <var> element for this variable based on the SPSS data format.

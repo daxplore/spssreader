@@ -1343,6 +1343,25 @@ public class SPSSFile extends RandomAccessFile {
 						varIndex++;
 					}
 					break;
+          case 21: // Long string value labels
+            SPSSRecordType7Subtype21 recordType7Subtype21 = new SPSSRecordType7Subtype21();
+            recordType7Subtype21.read(this);
+            log(recordType7Subtype21.toString());
+
+            for(SPSSRecordType7Subtype21.Variable variable : recordType7Subtype21.getVariables()) {
+              // associate this value label set with variableMap(s) (usually only one variable)
+              SPSSVariable var = getVariableByName(variable.getName());
+
+              if (var == null) {
+                throw new SPSSFileException("Invalid variable name " + variable.getName());
+              }
+
+              // add each category to the variable list
+              for(SPSSRecordType7Subtype21.Label label : variable.getLabels()) {
+                var.addCategory(label.getValue().getBytes(), label.getLabel());
+              }
+            }
+            break;
 				default: // generic type 7
 					SPSSRecordType7 record7 = new SPSSRecordType7();
 					record7.read(this);
@@ -1459,4 +1478,12 @@ public class SPSSFile extends RandomAccessFile {
 		uniqueID = str;
 	}
 
+  private  SPSSVariable getVariableByName(String variableName) {
+    for (SPSSVariable var : variableMap.values()) {
+      if (var.getName().equals(variableName)) {
+        return var;
+      }
+    }
+    return null;
+  }
 }
