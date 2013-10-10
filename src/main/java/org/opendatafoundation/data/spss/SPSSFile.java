@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
 
 /**
  * A class to read SPSS files, produce DDI compatible metadata and export the data to ASCII.
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  * @version 2007.07
  */
@@ -126,15 +126,16 @@ public class SPSSFile extends RandomAccessFile {
 	SPSSRecordType7Subtype5 variableSetsInformationRecord;
 	SPSSRecordType7Subtype11 variableDisplayParamsRecord;
 	SPSSRecordType7Subtype13 longVariableNamesRecord;
+
 	public boolean isMetadataLoaded = false;
 
 	// SPSS Data (actual values stored in variables)
 	long dataStartPosition = -1;
 	public boolean isDataLoaded = false;
 
-	/**
+  /**
 	 * Constructor
-	 * 
+	 *
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
@@ -145,7 +146,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param file
 	 * @param mode
 	 * @throws FileNotFoundException
@@ -157,7 +158,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param name
 	 * @throws FileNotFoundException
 	 */
@@ -168,7 +169,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param name
 	 * @param mode
 	 * @throws FileNotFoundException
@@ -180,7 +181,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param file
 	 * @param charset
 	 * @throws FileNotFoundException
@@ -193,7 +194,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param file
 	 * @param mode
 	 * @param charset
@@ -207,7 +208,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param name
 	 * @param charset
 	 * @throws FileNotFoundException
@@ -220,7 +221,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param name
 	 * @param mode
 	 * @param charset
@@ -234,7 +235,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Dumps the file data to the console (for debugging purposes)
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws SPSSFileException
 	 */
@@ -244,7 +245,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Dumps the file data to the console (for debugging purposes)
-	 * 
+	 *
 	 * @param nRecords
 	 *            the number of records to dump (0 for all)
 	 * @throws IOException
@@ -256,7 +257,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Dumps the file data (for debugging purposes)
-	 * 
+	 *
 	 * @param nRecords
 	 *            the number of records to dump (0 for all)
 	 * @param dataFormat
@@ -274,7 +275,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Dumps the DDI2 metadata (for debugging purposes).
-	 * 
+	 *
 	 * @throws SPSSFileException
 	 * @throws TransformerException
 	 */
@@ -284,7 +285,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Dumps the DDI3 metadata(for debugging purposes).
-	 * 
+	 *
 	 * @throws SPSSFileException
 	 * @throws TransformerException
 	 */
@@ -325,7 +326,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Reads the data from the disk and exports a file based on the specified format
-	 * 
+	 *
 	 * @param file
 	 * @param dataFormat
 	 * @return The number of milliseconds taken to export the file
@@ -386,7 +387,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Determines if the data section of the file is compressed
-	 * 
+	 *
 	 * @throws SPSSFileException
 	 */
 	public boolean isCompressed() throws SPSSFileException {
@@ -402,7 +403,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 2.0 XML Document based for the SPSS data format
-	 * 
+	 *
 	 * @return the generated document
 	 * @throws SPSSFileException
 	 */
@@ -412,7 +413,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 2.0 XML Document based for the specified data file format
-	 * 
+	 *
 	 * @return the generated document
 	 * @throws SPSSFileException
 	 */
@@ -496,7 +497,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Physical Data Product identifier based on the file unique identifier.
-	 * 
+	 *
 	 * @return a String containing the r:ID
 	 */
 	public String getDDI3DefaultLogicalProductID() {
@@ -505,7 +506,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Physical Data Product identifier based on the file unique identifier and the data format.
-	 * 
+	 *
 	 * @return a String containing the r:ID
 	 */
 	public String getDDI3DefaultPhysicalDataProductID(FileFormatInfo dataFormat) {
@@ -514,7 +515,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Physical Instance identifier based on the file unique identifier and the data format.
-	 * 
+	 *
 	 * @param dataFormat
 	 * @return a String containing the r:ID
 	 */
@@ -524,7 +525,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Physical Structure Scheme identifier based on the file unique identifier and the data format.
-	 * 
+	 *
 	 * @return a String containing the r:ID
 	 */
 	public String getDDI3DefaultPhysicalStructureSchemeID(FileFormatInfo dataFormat) {
@@ -533,7 +534,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Record Layout Scheme identifier based on the file unique identifier and the data format.
-	 * 
+	 *
 	 * @return a String containing the r:ID
 	 */
 	public String getDDI3DefaultRecordLayoutSchemeID(FileFormatInfo dataFormat) {
@@ -542,7 +543,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns a default Variable Scheme identifier based on the file unique identifier.
-	 * 
+	 *
 	 * @return a String containing the r:ID
 	 */
 	public String getDDI3DefaultVariableSchemeID() {
@@ -551,7 +552,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 Logical Product XML Module for this file.
-	 * 
+	 *
 	 * @return a Document containing the generated Logical Data Product
 	 * @throws SPSSFileException
 	 */
@@ -561,7 +562,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 Logical Product XML Module for this file.
-	 * 
+	 *
 	 * @param uniqueID
 	 *            a String value for the r:ID element. If null, a unique ID will be generated automatically based on the java.util.UUID class
 	 * @return a org.w3c.dom.Document containing the generated Logical Data Product
@@ -573,7 +574,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 LogiclaProduct XML Document for this file.
-	 * 
+	 *
 	 * @param uniqueID
 	 *            a String value for the r:ID element. If null, a unique ID will be generated automatically based on the java.util.UUID class
 	 * @param identifyingAgency
@@ -644,7 +645,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalDataProduct XML Document for this file based on the specified file format using the default logical product ID.
-	 * 
+	 *
 	 * @param dataFormat
 	 * @return a org.w3c.dom.Document containing the generated Physical Data Product
 	 * @throws SPSSFileException
@@ -655,7 +656,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalDataProduct XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param dataFormat
 	 * @param logicalProductID
 	 *            the r:ID of the Logical Product this is refering to
@@ -668,7 +669,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalDataProduct XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param dataFormat
 	 * @param logicalProductID
 	 *            the r:ID of the Logical Product this is referring to
@@ -683,7 +684,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalDataProduct XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param dataFormat
 	 * @param logicalProductID
 	 *            the r:ID of the Logical Product this is referring to
@@ -877,7 +878,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalInstance XML Document for this file based on the specified file format using default indentifiers.
-	 * 
+	 *
 	 * @param uri
 	 * @param dataFormat
 	 * @return a org.w3c.dom.Document containing the generated Physical Data Instance
@@ -889,7 +890,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalInstance XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param uri
 	 * @param dataFormat
 	 * @param recordLayoutSchemeID
@@ -903,7 +904,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalInstance XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param uri
 	 * @param dataFormat
 	 * @param recordLayoutSchemeID
@@ -919,7 +920,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Creates a DDI 3.0 PhysicalInstance XML Document for this file based on the specified file format.
-	 * 
+	 *
 	 * @param uri
 	 * @param dataFormat
 	 * @param recordLayoutSchemeID
@@ -996,7 +997,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Gets a data record from data in memory based on on the record number and specified format.
-	 * 
+	 *
 	 * @param obsNumber
 	 * @param dataFormat
 	 * @return A string holding the record values
@@ -1032,7 +1033,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Gets a data record in the specified format. If rewind is false, this assumes the file pointer is ta the correct location
-	 * 
+	 *
 	 * @param dataFormat
 	 * @param rewind
 	 *            If true start reading from first record otherwise continue from current location until end of file is reached
@@ -1079,7 +1080,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns the total number of records (cases) in the file.
-	 * 
+	 *
 	 * @return the number of records in the file
 	 */
 	public int getRecordCount() {
@@ -1088,7 +1089,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Gets the unique identifier for this file. If this value is not set, a unique string will be generated using java.util.UUID.randomUUID()
-	 * 
+	 *
 	 * @return a String holding the identifier
 	 */
 	public String getUniqueID() {
@@ -1099,7 +1100,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Gets a SPSSVariable based on its 0-based file index position.
-	 * 
+	 *
 	 * @return SPSSVariable
 	 * @throws SPSSFileException
 	 */
@@ -1112,7 +1113,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Returns the total number of variables in the file.
-	 * 
+	 *
 	 * @return the number of records in the file
 	 */
 	public int getVariableCount() {
@@ -1121,7 +1122,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Load the data section of the file into the variables in memory. This may be expensive on memory, use with care on large datasets
-	 * 
+	 *
 	 * @throws SPSSFileException
 	 * @throws IOException
 	 */
@@ -1144,7 +1145,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Loads the dictionary and other SPSS metadata from the file
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws SPSSFileException
@@ -1325,24 +1326,42 @@ public class SPSSFile extends RandomAccessFile {
 					longVariableNamesRecord = new SPSSRecordType7Subtype13();
 					longVariableNamesRecord.read(this);
 					log(longVariableNamesRecord.toString());
-					// update variables
-					Iterator it = longVariableNamesRecord.nameMap.entrySet().iterator();
-					varIndex = 0;
+
+					// iterate through all variables and remove the ones that are in the map
+					SPSSVariable currentVar = null;
+					int deletedCount = 0;
+					Iterator it = variableMap.entrySet().iterator();
+
 					while (it.hasNext()) {
-						Map.Entry entry = (Map.Entry) it.next();
-						SPSSVariable var = getVariable(varIndex);
-						// make sure the short name matches and that it's not a string continuation
-						// daxplore: variableTypeCode seems to be 0 for all but the first variable (why? correct?)
-						// daxplore: disabled check to be able to get long variable names
-						if (/* var.variableRecord.variableTypeCode!=0 && */var.variableShortName.equalsIgnoreCase((String) entry.getKey())) {
-							var.variableName = (String) entry.getValue();
-						}
-						/*
-						 * else { log(var.variableShortName+"!="+entry.getKey()); }
-						 */
-						varIndex++;
+					Map.Entry entry = (Map.Entry)it.next();
+					SPSSVariable var = (SPSSVariable)entry.getValue();
+					String longName = longVariableNamesRecord.nameMap.get(var.getShortName());
+					if (longName != null && !longName.isEmpty()) {
+					  currentVar = var;
+					  var.variableName = longName;
+					  var.variableNumber -= deletedCount;
+					}
+					else {
+					  // this must be a segment variable of a string variable stored in currentVar
+					  if (currentVar instanceof SPSSStringVariable) {
+						((SPSSStringVariable)currentVar).segments.add(var);
+						it.remove();
+						deletedCount++;
+					  }
+					  else {
+						throw new SPSSFileException("Variable " + var.getName() +
+							" is not in the variable dictionary and is not a segment of a string variable.");
+					  }
+					}
 					}
 					break;
+            // NOTE: for now this case is not accounted fot until we learn how to use SPSSRecordType7Subtype14
+            // to stitch long string vatiables. For now, case 13: implements a solution
+//          case 14:
+//            veryLongStringVariableRecord = new SPSSRecordType7Subtype14();
+//            veryLongStringVariableRecord.read(this);
+//            log(veryLongStringVariableRecord.toString());
+//            break;
           case 21: // Long string value labels
             SPSSRecordType7Subtype21 recordType7Subtype21 = new SPSSRecordType7Subtype21();
             recordType7Subtype21.read(this);
@@ -1389,7 +1408,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Logs a message to the console.
-	 * 
+	 *
 	 * @param msg
 	 * @throws IOException
 	 */
@@ -1416,7 +1435,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Reads a 8-byte IEEE 754 from SPSS file
-	 * 
+	 *
 	 * @return the double value read from the file
 	 */
 	public double readSPSSDouble() throws IOException {
@@ -1433,7 +1452,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Reads a 4-byte integer from the SPSS file
-	 * 
+	 *
 	 * @return the integer value read from the file
 	 */
 	public int readSPSSInt() throws IOException {
@@ -1452,7 +1471,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Reads a string from the SPSS file
-	 * 
+	 *
 	 * @param length
 	 *            Number of characters to read
 	 * @return the String value read from the file
@@ -1471,7 +1490,7 @@ public class SPSSFile extends RandomAccessFile {
 
 	/**
 	 * Sets the unique identifier for this file.
-	 * 
+	 *
 	 * @param str
 	 */
 	public void setUniqueID(String str) {

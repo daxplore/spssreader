@@ -43,6 +43,9 @@ import org.opendatafoundation.data.Utils;
 public class SPSSStringVariable extends SPSSVariable {
 	/** a list of data values used to load the file into memory */
 	public List<String> data;
+  /** list of segments for long string variables **/
+  public List<SPSSVariable> segments;
+
 	/** a single data value used when reading data from disk */
 	public String value;
 
@@ -50,6 +53,7 @@ public class SPSSStringVariable extends SPSSVariable {
 		super(file);
 		type = VariableType.STRING;
 		data = new ArrayList<String>();
+		segments = new ArrayList<SPSSVariable>();
 	}
 
   @Override
