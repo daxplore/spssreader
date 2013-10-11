@@ -38,20 +38,24 @@ public class SPSSRecordType7Subtype21 extends SPSSAbstractRecordType {
 
     if(recordTypeCode != RECORD_TYPE) {
       throw new SPSSFileException(
-          "Error reading record type  " + RECORD_TYPE + " subtype " + SUB_RECORD_TYPE + ": bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
+          "Error reading record type  " + RECORD_TYPE + " subtype " + SUB_RECORD_TYPE + ": bad record type [" +
+              recordTypeCode + "]. Expecting Record Type 7.");
     }
 
     // subtype
     recordSubtypeCode = is.readSPSSInt();
     if(recordSubtypeCode != SUB_RECORD_TYPE) {
-      throw new SPSSFileException("Error reading record type" + RECORD_TYPE + "subtype " + SUB_RECORD_TYPE + ": bad sub-record type [" + recordSubtypeCode +
-          "]. Expecting Record Subtype 21.");
+      throw new SPSSFileException(
+          "Error reading record type" + RECORD_TYPE + "subtype " + SUB_RECORD_TYPE + ": bad sub-record type [" +
+              recordSubtypeCode +
+              "]. Expecting Record Subtype 21.");
     }
 
     // data elements
     dataElementLength = is.readSPSSInt();
     if(dataElementLength != DATA_ELEMENT_LENGTH) throw new SPSSFileException(
-        "Error reading record type" + RECORD_TYPE + "subtype " + SUB_RECORD_TYPE + ": bad data element length [" + dataElementLength + "]. Expecting 1.");
+        "Error reading record type" + RECORD_TYPE + "subtype " + SUB_RECORD_TYPE + ": bad data element length [" +
+            dataElementLength + "]. Expecting 1.");
 
     numberOfDataElements = is.readSPSSInt();
     long filePointer = is.getFilePointer();
@@ -125,11 +129,10 @@ public class SPSSRecordType7Subtype21 extends SPSSAbstractRecordType {
 
     public String toString() {
       StringBuilder str = new StringBuilder() //
-        .append("\nVariable")
-        .append("\n- Variable name length  : ").append(variableNameLength) //
-        .append("\n- Variable name         : ").append(name) //
-        .append("\n- Variable width        : ").append(nameWidth) //
-        .append("\n- Number of labels      : ").append(numberOfLabels);
+          .append("\nVariable").append("\n- Variable name length  : ").append(variableNameLength) //
+          .append("\n- Variable name         : ").append(name) //
+          .append("\n- Variable width        : ").append(nameWidth) //
+          .append("\n- Number of labels      : ").append(numberOfLabels);
 
       for(Label label : labels) {
         str.append(label.toString());
@@ -166,11 +169,11 @@ public class SPSSRecordType7Subtype21 extends SPSSAbstractRecordType {
     @SuppressWarnings("StringBufferReplaceableByString")
     public String toString() {
       return new StringBuilder() //
-        .append("\nLabels") //
-        .append("\n- Label length  : ").append(labelLength) //
-        .append("\n- Label         : ").append(label) //
-        .append("\n- Value length  : ").append(valueLength) //
-        .append("\n- Value         : ").append(value).toString();
+          .append("\nLabels") //
+          .append("\n- Label length  : ").append(labelLength) //
+          .append("\n- Label         : ").append(label) //
+          .append("\n- Value length  : ").append(valueLength) //
+          .append("\n- Value         : ").append(value).toString();
     }
   }
 }

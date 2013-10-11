@@ -33,14 +33,14 @@ import java.io.IOException;
 
 /**
  * Abstratc call for metadata Record types
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public abstract class SPSSAbstractRecordType {
-	long fileLocation;
+  long fileLocation;
 
-	public abstract void read(SPSSFile is) throws IOException, SPSSFileException;
+  public abstract void read(SPSSFile is) throws IOException, SPSSFileException;
 
-	public abstract String toString();
+  public abstract String toString();
 
 }

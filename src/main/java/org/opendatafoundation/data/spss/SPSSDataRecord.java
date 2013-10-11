@@ -38,53 +38,55 @@ import java.util.Iterator;
  * @author Pascal Heus (pheus@opendatafoundation)
  */
 public class SPSSDataRecord {
-	SPSSFile file;
-	long fileLocation;
+  SPSSFile file;
 
-	static byte[] cluster = new byte[8]; // 8-byte cluster for compressed files (this value is retained between calls)
-	static byte clusterIndex = 8; // for compressed files (once initialized, this value is retained between calls)
+  long fileLocation;
 
-	/**
-	 * Reads the values for the current observation into memory. This assumes that the file pointer is properly positionned.
-	 *
-	 * @throws IOException
-	 * @throws SPSSFileException
-	 */
-	public void read(SPSSFile is) throws IOException, SPSSFileException {
-		read(is, false);
-	}
+  static byte[] cluster = new byte[8]; // 8-byte cluster for compressed files (this value is retained between calls)
 
-	/**
-	 * Reads the values for the current observation into memory. If fromDisk is set to true, the record values are loaded into the variable single values instead of the data list This assumes that the file pointer is properly positionned.
-	 *
-	 * @throws IOException
-	 * @throws SPSSFileException
-	 */
-	public void read(SPSSFile is, boolean fromDisk) throws IOException, SPSSFileException {
-		file = is;
-		fileLocation = file.getFilePointer();
-		Iterator varIterator = file.variableMap.keySet().iterator();
+  static byte clusterIndex = 8; // for compressed files (once initialized, this value is retained between calls)
 
-		while (varIterator.hasNext()) {
-			SPSSVariable var = file.variableMap.get(varIterator.next());
+  /**
+   * Reads the values for the current observation into memory. This assumes that the file pointer is properly positionned.
+   *
+   * @throws IOException
+   * @throws SPSSFileException
+   */
+  public void read(SPSSFile is) throws IOException, SPSSFileException {
+    read(is, false);
+  }
+
+  /**
+   * Reads the values for the current observation into memory. If fromDisk is set to true, the record values are loaded into the variable single values instead of the data list This assumes that the file pointer is properly positionned.
+   *
+   * @throws IOException
+   * @throws SPSSFileException
+   */
+  public void read(SPSSFile is, boolean fromDisk) throws IOException, SPSSFileException {
+    file = is;
+    fileLocation = file.getFilePointer();
+    Iterator varIterator = file.variableMap.keySet().iterator();
+
+    while(varIterator.hasNext()) {
+      SPSSVariable var = file.variableMap.get(varIterator.next());
       DataValue<?> value = readData(var);
 
-      if (var.type == SPSSVariable.VariableType.NUMERIC) {
+      if(var.type == SPSSVariable.VariableType.NUMERIC) {
         setVariableValue(var, fromDisk, value);
       } else {
         DataValue.Builder dataValueBuilder = new DataValue.Builder(SPSSVariable.VariableType.STRING);
-        dataValueBuilder.setValue((String)value.getData());
-        SPSSStringVariable stringVariable = (SPSSStringVariable)var;
+        dataValueBuilder.setValue((String) value.getData());
+        SPSSStringVariable stringVariable = (SPSSStringVariable) var;
 
         // stitch the vary long string values into one string
-        for (SPSSVariable segment : stringVariable.segments) {
-          dataValueBuilder.appendValue((String)readData(segment).getData());
+        for(SPSSVariable segment : stringVariable.segments) {
+          dataValueBuilder.appendValue((String) readData(segment).getData());
         }
 
-        setStringVariableValue(stringVariable, fromDisk, (String)dataValueBuilder.build().getData());
+        setStringVariableValue(stringVariable, fromDisk, (String) dataValueBuilder.build().getData());
       }
-		} // next variable
-	}
+    } // next variable
+  }
 
   private DataValue<?> readData(SPSSVariable var) throws SPSSFileException, IOException {
 
@@ -96,7 +98,7 @@ public class SPSSDataRecord {
     DataValue.Builder dataValueBuilder = new DataValue.Builder(var.type);
 
     // init
-    if (var.type == SPSSVariable.VariableType.NUMERIC) {
+    if(var.type == SPSSVariable.VariableType.NUMERIC) {
       blocksToRead = 1;
     } else {
       // string: depends on string length but always in blocks of 8 bytes
@@ -105,12 +107,12 @@ public class SPSSDataRecord {
     }
 
     // read the variable from the file
-    while (blocksToRead > 0) {
+    while(blocksToRead > 0) {
       // file.log("REMAINING #blocks ="+blocksToRead);
-      if (file.isCompressed()) {
-					/* COMPRESSED DATA FILE */
+      if(file.isCompressed()) {
+          /* COMPRESSED DATA FILE */
         // file.log("cluster index "+clusterIndex);
-        if (clusterIndex > 7) {
+        if(clusterIndex > 7) {
           // file.log("READ CLUSTER");
           // need to read a new compression cluster of up to 8 variables
           file.read(cluster);
@@ -121,13 +123,14 @@ public class SPSSDataRecord {
         // file.log("Variable "+var.variableRecord.name+" cluster byte"+(clusterIndex)+"="+byteValue);
         clusterIndex++;
 
-        switch (byteValue) {
+        switch(byteValue) {
           case 0: // skip this code
             break;
           case 252: // end of file, no more data to follow. This should not happen.
-            throw new SPSSFileException("Error reading data: unexpected end of compressed data file (cluster code 252)");
+            throw new SPSSFileException(
+                "Error reading data: unexpected end of compressed data file (cluster code 252)");
           case 253: // data cannot be compressed, the value follows the cluster
-            if (var.type == SPSSVariable.VariableType.NUMERIC) {
+            if(var.type == SPSSVariable.VariableType.NUMERIC) {
               dataValueBuilder.setValue(file.readSPSSDouble());
             } else { // STRING
               // read a maximum of 8 characters but could be less if this is the last block
@@ -135,7 +138,7 @@ public class SPSSDataRecord {
               // append to existing value
               dataValueBuilder.appendValue(file.readSPSSString(blockStringLength));
               // if this is the last block, skip the remaining dummy byte(s) (in the block of 8 bytes)
-              if (charactersToRead < 8) {
+              if(charactersToRead < 8) {
                 file.skipBytes(8 - charactersToRead);
               }
               // update the characters counter
@@ -143,7 +146,7 @@ public class SPSSDataRecord {
             }
             break;
           case 254: // all blanks
-            if (var.type == SPSSVariable.VariableType.NUMERIC) {
+            if(var.type == SPSSVariable.VariableType.NUMERIC) {
               // note: not sure this is used for numeric values (?)
               dataValueBuilder.setValue(0.0);
             } else {
@@ -152,7 +155,7 @@ public class SPSSDataRecord {
             }
             break;
           case 255: // system missing value
-            if (var.type == SPSSVariable.VariableType.NUMERIC) {
+            if(var.type == SPSSVariable.VariableType.NUMERIC) {
               // numeric variable
               dataValueBuilder.setValue(Double.NaN);
             } else {
@@ -161,7 +164,7 @@ public class SPSSDataRecord {
             }
             break;
           default: // 1-251 value is code minus the compression BIAS (normally always equal to 100)
-            if (var.type == SPSSVariable.VariableType.NUMERIC) {
+            if(var.type == SPSSVariable.VariableType.NUMERIC) {
               // numeric variable
               dataValueBuilder.setValue(byteValue - file.infoRecord.compressionBias);
             } else {
@@ -172,7 +175,7 @@ public class SPSSDataRecord {
         }
       } else {
 					/* UNCOMPRESSED DATA */
-        if (var.type == SPSSVariable.VariableType.NUMERIC) {
+        if(var.type == SPSSVariable.VariableType.NUMERIC) {
           dataValueBuilder.setValue(file.readSPSSDouble());
         } else {
           // read a maximum of 8 characters but could be less if this is the last block
@@ -180,7 +183,7 @@ public class SPSSDataRecord {
           // append to existing value
           dataValueBuilder.appendValue(file.readSPSSString(blockStringLength));
           // if this is the last block, skip the remaining dummy byte(s) (in block of 8 bytes)
-          if (charactersToRead < 8) {
+          if(charactersToRead < 8) {
             // file.log("SKIP "+file.skipBytes(8-charactersToRead)+"/"+(8-charactersToRead));
           }
           // update counter
@@ -195,17 +198,16 @@ public class SPSSDataRecord {
 
   private void setVariableValue(SPSSVariable var, boolean fromDisk, DataValue<?> dataValue) {
 
-    if (var.type == SPSSVariable.VariableType.NUMERIC) {
-      setNumericVariableValue((SPSSNumericVariable)var, fromDisk, (Double)dataValue.getData());
+    if(var.type == SPSSVariable.VariableType.NUMERIC) {
+      setNumericVariableValue((SPSSNumericVariable) var, fromDisk, (Double) dataValue.getData());
     } else { // STRING
-      setStringVariableValue((SPSSStringVariable)var, fromDisk, (String)dataValue.getData());
+      setStringVariableValue((SPSSStringVariable) var, fromDisk, (String) dataValue.getData());
     }
   }
 
   private void setNumericVariableValue(SPSSNumericVariable variable, boolean fromDisk, Double value) {
     // numeric: always uses 1 block of 8 bytes
-    if (fromDisk)
-      variable.value = value;
+    if(fromDisk) variable.value = value;
     else {
       variable.data.add(Double.NaN);
       variable.data.set(variable.data.size() - 1, value);
@@ -214,8 +216,7 @@ public class SPSSDataRecord {
   }
 
   private void setStringVariableValue(SPSSStringVariable variable, boolean fromDisk, String value) {
-    if (fromDisk)
-      variable.value = value;
+    if(fromDisk) variable.value = value;
     else {
       variable.data.add("");
       variable.data.set(variable.data.size() - 1, value);
@@ -235,7 +236,9 @@ public class SPSSDataRecord {
 
     private static class Builder {
       private SPSSVariable.VariableType type;
+
       private Double doubleValue;
+
       private StringBuilder stringValueBuilder = new StringBuilder();
 
       public Builder(SPSSVariable.VariableType type) {
@@ -258,14 +261,14 @@ public class SPSSDataRecord {
       }
 
       public DataValue build() {
-        if (type == SPSSVariable.VariableType.NUMERIC) return new DataValue<Double>(doubleValue);
+        if(type == SPSSVariable.VariableType.NUMERIC) return new DataValue<Double>(doubleValue);
         return new DataValue<String>(postProcessString(stringValueBuilder.toString()));
       }
 
       private String postProcessString(String value) {
-        if (type == SPSSVariable.VariableType.STRING) {
+        if(type == SPSSVariable.VariableType.STRING) {
           // If the variable is a string and all the blocks where blank (254), make it an empty string
-          if (value.trim().length() == 0) {
+          if(value.trim().length() == 0) {
             return "";
           } else {
             // right trim only

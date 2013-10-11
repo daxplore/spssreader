@@ -31,18 +31,18 @@ package org.opendatafoundation.data.spss;
 
 /**
  * SPSS File exception class
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSFileException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 586118718371714268L;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 586118718371714268L;
 
-	public SPSSFileException(String s) {
-		super(s);
-		System.out.println(this.getClass().getName() + "->" + s);
-	}
+  public SPSSFileException(String s) {
+    super(s);
+    System.out.println(this.getClass().getName() + "->" + s);
+  }
 }

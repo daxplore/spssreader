@@ -2,7 +2,7 @@
  * <p>
  * Provides generic classes for the management of statistical data files.
  * </p>
- * 
+ *
  * <h2>Acknowledgements</h2>
  * <p>
  * This product has been developed with the financial and
@@ -10,7 +10,7 @@
  * project (http://www.data-archive.ac.uk/dext/) and the
  * Open Data Foundation (http://www.opendatafoundation.org)
  * </p>
- * 
+ *
  * <h2>License</h2>
  * <p>
  * Copyright 2007-2008 University of Essex (http://www.esds.ac.uk)

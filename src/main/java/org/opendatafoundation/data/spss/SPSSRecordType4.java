@@ -33,40 +33,42 @@ import java.io.IOException;
 
 /**
  * SPSS Record Type 4 - Value labels variable index
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSRecordType4 extends SPSSAbstractRecordType {
-	int recordTypeCode;
-	int numberOfVariables;
-	int[] variableIndex;
+  int recordTypeCode;
 
-	public void read(SPSSFile is) throws IOException, SPSSFileException {
-		// position in file
-		fileLocation = is.getFilePointer();
+  int numberOfVariables;
 
-		// record type
-		recordTypeCode = is.readSPSSInt();
-		if (recordTypeCode != 4)
-			throw new SPSSFileException("Error reading Variable Index record: bad record type [" + recordTypeCode + "]. Expecting Record Type 4.");
-		// number of variables
-		numberOfVariables = is.readSPSSInt();
-		// variableRecord indexes
-		variableIndex = new int[numberOfVariables];
-		for (int i = 0; i < numberOfVariables; i++) {
-			variableIndex[i] = is.readSPSSInt();
-		}
-	}
+  int[] variableIndex;
 
-	public String toString() {
-		String str = "";
-		str += "\nRECORD TYPE 4 - VARIABLE INDEX RECORD FOR VALUE LABELS";
-		str += "\nLocation        : " + fileLocation;
-		str += "\nRecord Type     : " + recordTypeCode;
-		str += "\nNumber of vars  : " + numberOfVariables;
-		str += "\nVar indexes     : ";
-		for (int i = 0; i < numberOfVariables; i++)
-			str += variableIndex[i];
-		return (str);
-	}
+  public void read(SPSSFile is) throws IOException, SPSSFileException {
+    // position in file
+    fileLocation = is.getFilePointer();
+
+    // record type
+    recordTypeCode = is.readSPSSInt();
+    if(recordTypeCode != 4) throw new SPSSFileException(
+        "Error reading Variable Index record: bad record type [" + recordTypeCode + "]. Expecting Record Type 4.");
+    // number of variables
+    numberOfVariables = is.readSPSSInt();
+    // variableRecord indexes
+    variableIndex = new int[numberOfVariables];
+    for(int i = 0; i < numberOfVariables; i++) {
+      variableIndex[i] = is.readSPSSInt();
+    }
+  }
+
+  public String toString() {
+    String str = "";
+    str += "\nRECORD TYPE 4 - VARIABLE INDEX RECORD FOR VALUE LABELS";
+    str += "\nLocation        : " + fileLocation;
+    str += "\nRecord Type     : " + recordTypeCode;
+    str += "\nNumber of vars  : " + numberOfVariables;
+    str += "\nVar indexes     : ";
+    for(int i = 0; i < numberOfVariables; i++)
+      str += variableIndex[i];
+    return (str);
+  }
 }

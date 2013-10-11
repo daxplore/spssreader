@@ -37,24 +37,31 @@ import org.opendatafoundation.data.Utils;
 
 /**
  * SPSS string variable
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSStringVariable extends SPSSVariable {
-	/** a list of data values used to load the file into memory */
-	public List<String> data;
-  /** list of segments for long string variables **/
+  /**
+   * a list of data values used to load the file into memory
+   */
+  public List<String> data;
+
+  /**
+   * list of segments for long string variables *
+   */
   public List<SPSSVariable> segments;
 
-	/** a single data value used when reading data from disk */
-	public String value;
+  /**
+   * a single data value used when reading data from disk
+   */
+  public String value;
 
-	public SPSSStringVariable(SPSSFile file) {
-		super(file);
-		type = VariableType.STRING;
-		data = new ArrayList<String>();
-		segments = new ArrayList<SPSSVariable>();
-	}
+  public SPSSStringVariable(SPSSFile file) {
+    super(file);
+    type = VariableType.STRING;
+    data = new ArrayList<String>();
+    segments = new ArrayList<SPSSVariable>();
+  }
 
   @Override
   public int getNumberOfObservations() {
@@ -68,95 +75,92 @@ public class SPSSStringVariable extends SPSSVariable {
     variableRecord.writeFormatWidth = value;
   }
 
-	/**
-	 * Adds a category to the variable
-	 */
-	public SPSSVariableCategory addCategory(byte[] byteValue, String label) {
-		SPSSVariableCategory cat;
-		String strValue;
-		if (file.charset == null) {
-			strValue = SPSSUtils.byte8ToString(byteValue);
-		} else {
-			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
-		}
+  /**
+   * Adds a category to the variable
+   */
+  public SPSSVariableCategory addCategory(byte[] byteValue, String label) {
+    SPSSVariableCategory cat;
+    String strValue;
+    if(file.charset == null) {
+      strValue = SPSSUtils.byte8ToString(byteValue);
+    } else {
+      strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
+    }
 
-		cat = categoryMap.get(strValue);
-		if (cat == null) {
-			// create and add to the map
-			cat = new SPSSVariableCategory();
-			categoryMap.put(strValue, cat);
-		}
-		cat.strValue = strValue;
-		cat.label = label;
-		return (cat);
-	}
+    cat = categoryMap.get(strValue);
+    if(cat == null) {
+      // create and add to the map
+      cat = new SPSSVariableCategory();
+      categoryMap.put(strValue, cat);
+    }
+    cat.strValue = strValue;
+    cat.label = label;
+    return (cat);
+  }
 
-	/**
-	 * Gets a category for this variable based on a byte[8] value
-	 */
-	public SPSSVariableCategory getCategory(byte[] byteValue) {
-		String strValue;
-		if (file.charset == null) {
-			strValue = SPSSUtils.byte8ToString(byteValue);
-		} else {
-			strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
-		}
-		return (getCategory(strValue));
-	}
+  /**
+   * Gets a category for this variable based on a byte[8] value
+   */
+  public SPSSVariableCategory getCategory(byte[] byteValue) {
+    String strValue;
+    if(file.charset == null) {
+      strValue = SPSSUtils.byte8ToString(byteValue);
+    } else {
+      strValue = SPSSUtils.byte8ToString(byteValue, file.charset);
+    }
+    return (getCategory(strValue));
+  }
 
-	/**
-	 * Gets a category for this variable based on a double value
-	 */
-	public SPSSVariableCategory getCategory(String strValue) {
-		return (categoryMap.get(strValue));
-	}
+  /**
+   * Gets a category for this variable based on a double value
+   */
+  public SPSSVariableCategory getCategory(String strValue) {
+    return (categoryMap.get(strValue));
+  }
 
-	/**
-	 * @return A string representing variable in SPSS syntax
-	 */
-	public String getSPSSFormat() {
-		// TODO: AHEXw format?
-		return ("A" + variableRecord.writeFormatWidth);
-	}
+  /**
+   * @return A string representing variable in SPSS syntax
+   */
+  public String getSPSSFormat() {
+    // TODO: AHEXw format?
+    return ("A" + variableRecord.writeFormatWidth);
+  }
 
-	/**
-	 * Returns an observation value as a string
-	 * 
-	 * @throws SPSSFileException
-	 * 
-	 */
-	public String getValueAsString(int obsNumber, FileFormatInfo dataFormat) throws SPSSFileException {
-		String strValue;
+  /**
+   * Returns an observation value as a string
+   *
+   * @throws SPSSFileException
+   */
+  public String getValueAsString(int obsNumber, FileFormatInfo dataFormat) throws SPSSFileException {
+    String strValue;
 
-		// check range
-		if (obsNumber < 0 || obsNumber > data.size()) {
-			throw new SPSSFileException("Invalid observation number [" + obsNumber + ". Range is 1 to " + data.size() + "] or 0.");
-		}
-		// init value
-		if (obsNumber == 0)
-			strValue = value;
-		else if (obsNumber > 0 && data.size() == 0)
-			throw new SPSSFileException("No data availble");
-		else
-			strValue = data.get(obsNumber - 1);
+    // check range
+    if(obsNumber < 0 || obsNumber > data.size()) {
+      throw new SPSSFileException(
+          "Invalid observation number [" + obsNumber + ". Range is 1 to " + data.size() + "] or 0.");
+    }
+    // init value
+    if(obsNumber == 0) strValue = value;
+    else if(obsNumber > 0 && data.size() == 0) throw new SPSSFileException("No data availble");
+    else strValue = data.get(obsNumber - 1);
 
-		// format output
-		if (dataFormat.format == FileFormatInfo.Format.ASCII) {
-			if (dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.FIXED) { // padding
-				strValue += Utils.leftPad("", this.getLength() - strValue.length());
-			} else if (dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.CSV) {
-				// see http://en.wikipedia.org/wiki/Comma-separated_values
-				// double the double-quote
-				if (strValue.contains("\"")) {
-					strValue = strValue.replaceAll("\"", "\"\"");
-				}
-				// surround by double-quote if contains comma, double-quote, line break
-				if (strValue.contains(",") || strValue.contains("\"") || strValue.contains("\n")) {
-					strValue = "\"" + strValue + "\"";
-				}
-			}
+    // format output
+    if(dataFormat.format == FileFormatInfo.Format.ASCII) {
+      if(dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.FIXED) { // padding
+        strValue += Utils.leftPad("", this.getLength() - strValue.length());
+      } else if(dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.CSV) {
+        // see http://en.wikipedia.org/wiki/Comma-separated_values
+        // double the double-quote
+        if(strValue.contains("\"")) {
+          strValue = strValue.replaceAll("\"", "\"\"");
+        }
+        // surround by double-quote if contains comma, double-quote, line break
+        if(strValue.contains(",") || strValue.contains("\"") || strValue.contains("\n")) {
+          strValue = "\"" + strValue + "\"";
+        }
+      }
 
-		}
-		return (strValue);
-	}
+    }
+    return (strValue);
+  }
 }

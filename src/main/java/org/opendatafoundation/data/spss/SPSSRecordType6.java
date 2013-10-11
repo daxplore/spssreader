@@ -33,40 +33,42 @@ import java.io.IOException;
 
 /**
  * SPSS Record Type 6 - Document record
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSRecordType6 extends SPSSAbstractRecordType {
-	int recordTypeCode;
-	int numberOfLines;
-	String[] line;
+  int recordTypeCode;
 
-	public void read(SPSSFile is) throws IOException, SPSSFileException {
-		// position in file
-		fileLocation = is.getFilePointer();
+  int numberOfLines;
 
-		// record type
-		recordTypeCode = is.readSPSSInt();
-		if (recordTypeCode != 6)
-			throw new SPSSFileException("Error reading variableRecord: bad record type [" + recordTypeCode + "]. Expecting Record Type 6.");
-		// number of variables
-		numberOfLines = is.readSPSSInt();
-		// read the lines
-		line = new String[numberOfLines];
-		for (int i = 0; i < numberOfLines; i++) {
-			line[i] = is.readSPSSString(80);
-		}
-	}
+  String[] line;
 
-	public String toString() {
-		String str = "";
-		str += "\nRECORD TYPE 6 - DOCUMENT RECORD";
-		str += "\nLocation        : " + fileLocation;
-		str += "\nRecord Type     : " + recordTypeCode;
-		str += "\nNumber of lines : " + numberOfLines;
-		for (int i = 0; i < numberOfLines; i++) {
-			str += line[i] + "\n";
-		}
-		return (str);
-	}
+  public void read(SPSSFile is) throws IOException, SPSSFileException {
+    // position in file
+    fileLocation = is.getFilePointer();
+
+    // record type
+    recordTypeCode = is.readSPSSInt();
+    if(recordTypeCode != 6) throw new SPSSFileException(
+        "Error reading variableRecord: bad record type [" + recordTypeCode + "]. Expecting Record Type 6.");
+    // number of variables
+    numberOfLines = is.readSPSSInt();
+    // read the lines
+    line = new String[numberOfLines];
+    for(int i = 0; i < numberOfLines; i++) {
+      line[i] = is.readSPSSString(80);
+    }
+  }
+
+  public String toString() {
+    String str = "";
+    str += "\nRECORD TYPE 6 - DOCUMENT RECORD";
+    str += "\nLocation        : " + fileLocation;
+    str += "\nRecord Type     : " + recordTypeCode;
+    str += "\nNumber of lines : " + numberOfLines;
+    for(int i = 0; i < numberOfLines; i++) {
+      str += line[i] + "\n";
+    }
+    return (str);
+  }
 }

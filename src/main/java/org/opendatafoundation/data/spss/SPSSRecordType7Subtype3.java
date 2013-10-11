@@ -34,134 +34,146 @@ import java.util.List;
 
 /**
  * SPSS Record Type 7 Subtype 3 - Release and machine specific "integer" type information. Added in SPSS release 4.0
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
  */
 public class SPSSRecordType7Subtype3 extends SPSSAbstractRecordType {
-	// type 7
-	int recordTypeCode;
-	int recordSubtypeCode;
-	int dataElementLength;
-	int numberOfDataElements;
-	// subtype 3
-	int releaseMajor;
-	int releaseMinor;
-	int releaseSpecial;
-	int machineCode;
-	int floatRepresentation; // 1=IEEE, 2=IBM370, 3=DEC BVAX E
-	int compressionScheme;
-	int endianness; // 1=big-endian, 2=little-endian
-	int characterRepresentation; // 1=EBCDIC, 2=7-bit ASCII, 3=8-bit ASCII, 4=DEC Kanji
+  // type 7
+  int recordTypeCode;
 
-	List<byte[]> dataElement;
+  int recordSubtypeCode;
 
-	public void read(SPSSFile is) throws IOException, SPSSFileException {
-		// position in file
-		fileLocation = is.getFilePointer();
+  int dataElementLength;
 
-		// record type
-		recordTypeCode = is.readSPSSInt();
-		if (recordTypeCode != 7)
-			throw new SPSSFileException("Error reading record type 7 subtype 3: bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
+  int numberOfDataElements;
 
-		// subtype
-		recordSubtypeCode = is.readSPSSInt();
-		if (recordSubtypeCode != 3)
-			throw new SPSSFileException("Error reading record type 7 subtype 3: bad subrecord type [" + recordSubtypeCode + "]. Expecting Record Subtype 3.");
+  // subtype 3
+  int releaseMajor;
 
-		// data elements
-		dataElementLength = is.readSPSSInt();
-		if (dataElementLength != 4)
-			throw new SPSSFileException("Error reading record type 7 subtype 3: bad data element length [" + dataElementLength + "]. Expecting 4.");
+  int releaseMinor;
 
-		numberOfDataElements = is.readSPSSInt();
-		if (numberOfDataElements != 8)
-			throw new SPSSFileException("Error reading record type 7 subtype 3: bad number of data elements [" + dataElementLength + "]. Expecting 8.");
+  int releaseSpecial;
 
-		releaseMajor = is.readSPSSInt();
-		releaseMinor = is.readSPSSInt();
-		releaseSpecial = is.readSPSSInt();
-		machineCode = is.readSPSSInt();
-		floatRepresentation = is.readSPSSInt();
-		compressionScheme = is.readSPSSInt();
-		endianness = is.readSPSSInt();
-		characterRepresentation = is.readSPSSInt();
-	}
+  int machineCode;
 
-	public String toString() {
-		String str = "";
-		str += "\nRECORD TYPE 7 SUBTYPE 3 - RELEASE AND MACHINE SPECIFIC INTEGER INFORMATION";
-		str += "\nLocation        : " + fileLocation;
-		str += "\nRecord Type     : " + recordTypeCode;
-		str += "\nRecord Subtype  : " + recordSubtypeCode;
-		str += "\nData elements   : " + numberOfDataElements;
-		str += "\nElement length  : " + dataElementLength;
-		str += "\nRelease major   : " + releaseMajor;
-		str += "\nRelease minor   : " + releaseMinor;
-		str += "\nRelease special : " + releaseSpecial;
-		str += "\nMachine code    : " + machineCode;
-		str += "\nFloating point  : " + floatRepresentation + " [" + getFloatRepresentationLabel() + "]";
-		str += "\nEndianness      : " + endianness + " [" + getEndiannessLabel() + "]";
-		;
-		str += "\nCharacter set   : " + characterRepresentation + " [" + getCharacterRepresentationLabel() + "]";
-		;
-		return (str);
-	}
+  int floatRepresentation; // 1=IEEE, 2=IBM370, 3=DEC BVAX E
 
-	/**
-	 * @return The label macthing the floating point representation
-	 */
-	public String getFloatRepresentationLabel() {
-		String label = "Unknown";
-		switch (floatRepresentation) {
-		case 1:
-			label = "IEEE";
-			break;
-		case 2:
-			label = "IBM 370";
-			break;
-		case 3:
-			label = "DEX VAX E";
-			break;
-		}
-		return (label);
-	}
+  int compressionScheme;
 
-	/**
-	 * @return The label macthing the floating point representation
-	 */
-	public String getEndiannessLabel() {
-		String label = "Unknown";
-		switch (floatRepresentation) {
-		case 1:
-			label = "Big endian";
-			break;
-		case 2:
-			label = "Little endian";
-			break;
-		}
-		return (label);
-	}
+  int endianness; // 1=big-endian, 2=little-endian
 
-	/**
-	 * @return The label macthing the character representation
-	 */
-	public String getCharacterRepresentationLabel() {
-		String label = "Unknown";
-		switch (characterRepresentation) {
-		case 1:
-			label = "EBCDIC";
-			break;
-		case 2:
-			label = "7-bit ASCII";
-			break;
-		case 3:
-			label = "8-bit ASCII";
-			break;
-		case 4:
-			label = "DEC Kanji";
-			break;
-		}
-		return (label);
-	}
+  int characterRepresentation; // 1=EBCDIC, 2=7-bit ASCII, 3=8-bit ASCII, 4=DEC Kanji
+
+  List<byte[]> dataElement;
+
+  public void read(SPSSFile is) throws IOException, SPSSFileException {
+    // position in file
+    fileLocation = is.getFilePointer();
+
+    // record type
+    recordTypeCode = is.readSPSSInt();
+    if(recordTypeCode != 7) throw new SPSSFileException(
+        "Error reading record type 7 subtype 3: bad record type [" + recordTypeCode + "]. Expecting Record Type 7.");
+
+    // subtype
+    recordSubtypeCode = is.readSPSSInt();
+    if(recordSubtypeCode != 3) throw new SPSSFileException(
+        "Error reading record type 7 subtype 3: bad subrecord type [" + recordSubtypeCode +
+            "]. Expecting Record Subtype 3.");
+
+    // data elements
+    dataElementLength = is.readSPSSInt();
+    if(dataElementLength != 4) throw new SPSSFileException(
+        "Error reading record type 7 subtype 3: bad data element length [" + dataElementLength + "]. Expecting 4.");
+
+    numberOfDataElements = is.readSPSSInt();
+    if(numberOfDataElements != 8) throw new SPSSFileException(
+        "Error reading record type 7 subtype 3: bad number of data elements [" + dataElementLength + "]. Expecting 8.");
+
+    releaseMajor = is.readSPSSInt();
+    releaseMinor = is.readSPSSInt();
+    releaseSpecial = is.readSPSSInt();
+    machineCode = is.readSPSSInt();
+    floatRepresentation = is.readSPSSInt();
+    compressionScheme = is.readSPSSInt();
+    endianness = is.readSPSSInt();
+    characterRepresentation = is.readSPSSInt();
+  }
+
+  public String toString() {
+    String str = "";
+    str += "\nRECORD TYPE 7 SUBTYPE 3 - RELEASE AND MACHINE SPECIFIC INTEGER INFORMATION";
+    str += "\nLocation        : " + fileLocation;
+    str += "\nRecord Type     : " + recordTypeCode;
+    str += "\nRecord Subtype  : " + recordSubtypeCode;
+    str += "\nData elements   : " + numberOfDataElements;
+    str += "\nElement length  : " + dataElementLength;
+    str += "\nRelease major   : " + releaseMajor;
+    str += "\nRelease minor   : " + releaseMinor;
+    str += "\nRelease special : " + releaseSpecial;
+    str += "\nMachine code    : " + machineCode;
+    str += "\nFloating point  : " + floatRepresentation + " [" + getFloatRepresentationLabel() + "]";
+    str += "\nEndianness      : " + endianness + " [" + getEndiannessLabel() + "]";
+    ;
+    str += "\nCharacter set   : " + characterRepresentation + " [" + getCharacterRepresentationLabel() + "]";
+    ;
+    return (str);
+  }
+
+  /**
+   * @return The label macthing the floating point representation
+   */
+  public String getFloatRepresentationLabel() {
+    String label = "Unknown";
+    switch(floatRepresentation) {
+      case 1:
+        label = "IEEE";
+        break;
+      case 2:
+        label = "IBM 370";
+        break;
+      case 3:
+        label = "DEX VAX E";
+        break;
+    }
+    return (label);
+  }
+
+  /**
+   * @return The label macthing the floating point representation
+   */
+  public String getEndiannessLabel() {
+    String label = "Unknown";
+    switch(floatRepresentation) {
+      case 1:
+        label = "Big endian";
+        break;
+      case 2:
+        label = "Little endian";
+        break;
+    }
+    return (label);
+  }
+
+  /**
+   * @return The label macthing the character representation
+   */
+  public String getCharacterRepresentationLabel() {
+    String label = "Unknown";
+    switch(characterRepresentation) {
+      case 1:
+        label = "EBCDIC";
+        break;
+      case 2:
+        label = "7-bit ASCII";
+        break;
+      case 3:
+        label = "8-bit ASCII";
+        break;
+      case 4:
+        label = "DEC Kanji";
+        break;
+    }
+    return (label);
+  }
 }

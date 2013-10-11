@@ -83,8 +83,7 @@ public class SPSSRecordType7Subtype14 extends SPSSAbstractRecordType {
         .append("\nCount                 : ").append(count) //
         .append("\nString lengths:       ");
 
-
-    for (Map.Entry<String, Integer> entry : stringLengths.entrySet()) {
+    for(Map.Entry<String, Integer> entry : stringLengths.entrySet()) {
       str.append("\t").append(entry);
     }
 

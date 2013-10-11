@@ -49,148 +49,150 @@ import org.w3c.dom.Node;
 
 /**
  * Collection of utility functions
- * 
+ *
  * @author Pascal Heus (pheus@opendatafoundation.org)
- * 
  */
 public class Utils {
 
-	/**
-	 * Converts an w3c.dom.Node into a String
-	 * 
-	 * @param node
-	 * @return The DOM as a String
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws TransformerException
-	 * @throws TransformerConfigurationException
-	 */
-	public static String DOM2String(Node node) throws TransformerException, TransformerFactoryConfigurationError {
-		TransformerFactory transFactory = TransformerFactory.newInstance();
-		StringWriter writer = new StringWriter();
-		transFactory.newTransformer().transform(new DOMSource(node), new StreamResult(writer));
-		String result = writer.getBuffer().toString();
-		return (result);
-	}
+  /**
+   * Converts an w3c.dom.Node into a String
+   *
+   * @param node
+   * @return The DOM as a String
+   * @throws TransformerFactoryConfigurationError
+   * @throws TransformerException
+   * @throws TransformerConfigurationException
+   */
+  public static String DOM2String(Node node) throws TransformerException, TransformerFactoryConfigurationError {
+    TransformerFactory transFactory = TransformerFactory.newInstance();
+    StringWriter writer = new StringWriter();
+    transFactory.newTransformer().transform(new DOMSource(node), new StreamResult(writer));
+    String result = writer.getBuffer().toString();
+    return (result);
+  }
 
-	/**
-	 * Converts an w3c.dom.Node into a color syntax HTML
-	 * 
-	 * @param node
-	 * @return The HTML as a String
-	 * @throws TransformerException
-	 */
-	public static String DOM2HTML(Node node) throws TransformerException {
-		TransformerFactory transFactory = TransformerFactory.newInstance();
-		StringWriter writer = new StringWriter();
-		Source xsltSource = new StreamSource(Utils.class.getResourceAsStream("xml2html.xslt")); // use this.getClass() instead for non static methods
-		Transformer transformer = transFactory.newTransformer(xsltSource);
-		StreamResult result = new StreamResult(System.out);
-		transformer.transform(new DOMSource(node), result);
-		return (writer.getBuffer().toString());
-	}
+  /**
+   * Converts an w3c.dom.Node into a color syntax HTML
+   *
+   * @param node
+   * @return The HTML as a String
+   * @throws TransformerException
+   */
+  public static String DOM2HTML(Node node) throws TransformerException {
+    TransformerFactory transFactory = TransformerFactory.newInstance();
+    StringWriter writer = new StringWriter();
+    Source xsltSource = new StreamSource(
+        Utils.class.getResourceAsStream("xml2html.xslt")); // use this.getClass() instead for non static methods
+    Transformer transformer = transFactory.newTransformer(xsltSource);
+    StreamResult result = new StreamResult(System.out);
+    transformer.transform(new DOMSource(node), result);
+    return (writer.getBuffer().toString());
+  }
 
-	/**
-	 * Pads a string left with spaces
-	 * 
-	 * @param str
-	 * @return the padded string
-	 */
-	public static String leftPad(String str, int length) {
-		return (leftPad(str, length, ' '));
-	}
+  /**
+   * Pads a string left with spaces
+   *
+   * @param str
+   * @return the padded string
+   */
+  public static String leftPad(String str, int length) {
+    return (leftPad(str, length, ' '));
+  }
 
-	/**
-	 * Pads a string left with specified character
-	 * 
-	 * @param str
-	 * @return the padded string
-	 */
-	public static String leftPad(String str, int length, char ch) {
-		int padding = length - str.length();
-		if (padding > 0) {
-			char[] buf = new char[padding];
-			for (int i = 0; i < padding; i++)
-				buf[i] = ch;
-			return (new String(buf) + str);
-		} else
-			return (str);
-	}
+  /**
+   * Pads a string left with specified character
+   *
+   * @param str
+   * @return the padded string
+   */
+  public static String leftPad(String str, int length, char ch) {
+    int padding = length - str.length();
+    if(padding > 0) {
+      char[] buf = new char[padding];
+      for(int i = 0; i < padding; i++)
+        buf[i] = ch;
+      return (new String(buf) + str);
+    } else return (str);
+  }
 
-	/**
-	 * Writes and org.w3c.dom.Document to a file
-	 * 
-	 * @param doc
-	 * @param filename
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws TransformerException
-	 */
-	public static void writeXmlFile(Document doc, String filename) throws TransformerFactoryConfigurationError, TransformerException {
-		// Prepare the DOM document for writing
-		Source source = new DOMSource(doc);
+  /**
+   * Writes and org.w3c.dom.Document to a file
+   *
+   * @param doc
+   * @param filename
+   * @throws TransformerFactoryConfigurationError
+   * @throws TransformerException
+   */
+  public static void writeXmlFile(Document doc, String filename)
+      throws TransformerFactoryConfigurationError, TransformerException {
+    // Prepare the DOM document for writing
+    Source source = new DOMSource(doc);
 
-		// Prepare the output file
-		File file = new File(filename);
-		Result result = new StreamResult(file);
+    // Prepare the output file
+    File file = new File(filename);
+    Result result = new StreamResult(file);
 
-		// Write the DOM document to the file
-		Transformer xformer = TransformerFactory.newInstance().newTransformer();
-		xformer.transform(source, result);
-	}
+    // Write the DOM document to the file
+    Transformer xformer = TransformerFactory.newInstance().newTransformer();
+    xformer.transform(source, result);
+  }
 
-	/**
-	 * Writes and org.w3c.dom.Document to a file in a colored syntax HTML file
-	 * 
-	 * @param doc
-	 * @param filename
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws TransformerException
-	 */
-	public static void writeXmlFileAsHtml(Document doc, String filename) throws TransformerFactoryConfigurationError, TransformerException {
-		// Prepare the DOM document for writing
-		Source source = new DOMSource(doc);
+  /**
+   * Writes and org.w3c.dom.Document to a file in a colored syntax HTML file
+   *
+   * @param doc
+   * @param filename
+   * @throws TransformerFactoryConfigurationError
+   * @throws TransformerException
+   */
+  public static void writeXmlFileAsHtml(Document doc, String filename)
+      throws TransformerFactoryConfigurationError, TransformerException {
+    // Prepare the DOM document for writing
+    Source source = new DOMSource(doc);
 
-		// Prepare the output file
-		File file = new File(filename);
-		Result result = new StreamResult(file);
+    // Prepare the output file
+    File file = new File(filename);
+    Result result = new StreamResult(file);
 
-		// Get transform
-		Source xsltSource = new StreamSource(Utils.class.getResourceAsStream("xml2html.xslt")); // use this.getClass() instead for non static methods
+    // Get transform
+    Source xsltSource = new StreamSource(
+        Utils.class.getResourceAsStream("xml2html.xslt")); // use this.getClass() instead for non static methods
 
-		// Write the DOM document to the file
-		Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltSource);
-		xformer.transform(source, result);
-	}
+    // Write the DOM document to the file
+    Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+    xformer.transform(source, result);
+  }
 
-	/**
-	 * Adds id related attributes to DDI Identifiable element
-	 * 
-	 * @param e
-	 * @param id
-	 */
-	public static void setDDIIdentifiableId(Element e, String id) {
-		e.setAttribute("id", id);
-		e.setAttribute("isIdentifiable", "true");
-	}
+  /**
+   * Adds id related attributes to DDI Identifiable element
+   *
+   * @param e
+   * @param id
+   */
+  public static void setDDIIdentifiableId(Element e, String id) {
+    e.setAttribute("id", id);
+    e.setAttribute("isIdentifiable", "true");
+  }
 
-	/**
-	 * Adds id related attributes to DDI Maintainable element
-	 * 
-	 * @param e
-	 * @param id
-	 */
-	public static void setDDIMaintainableId(Element e, String id) {
-		e.setAttribute("id", id);
-		e.setAttribute("isMaintainable", "true");
-	}
+  /**
+   * Adds id related attributes to DDI Maintainable element
+   *
+   * @param e
+   * @param id
+   */
+  public static void setDDIMaintainableId(Element e, String id) {
+    e.setAttribute("id", id);
+    e.setAttribute("isMaintainable", "true");
+  }
 
-	/**
-	 * Adds id related attributes to DDI Versionable element
-	 * 
-	 * @param e
-	 * @param id
-	 */
-	public static void setDDIVersionableId(Element e, String id) {
-		e.setAttribute("id", id);
-		e.setAttribute("isVersionable", "true");
-	}
+  /**
+   * Adds id related attributes to DDI Versionable element
+   *
+   * @param e
+   * @param id
+   */
+  public static void setDDIVersionableId(Element e, String id) {
+    e.setAttribute("id", id);
+    e.setAttribute("isVersionable", "true");
+  }
 }
