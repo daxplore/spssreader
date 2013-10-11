@@ -120,17 +120,20 @@ public class SPSSFile extends RandomAccessFile {
 	// SPSS Metadata
 	SPSSRecordType1 infoRecord; // < the SPSS type 1 record
 	Map<Integer, SPSSVariable> variableMap; // < list of variables (wraps a SPSSRecordType2)
+  // lookup table for all variables in the dictionary, does not contain string segment variables
+  Map<String, SPSSVariable> variableShortNameMap;
 	SPSSRecordType6 documentationRecord;
 	SPSSRecordType7Subtype3 integerInformationRecord;
 	SPSSRecordType7Subtype4 floatInformationRecord;
 	SPSSRecordType7Subtype5 variableSetsInformationRecord;
 	SPSSRecordType7Subtype11 variableDisplayParamsRecord;
+  SPSSRecordType7Subtype14 veryLongStringVariableRecord;
 	SPSSRecordType7Subtype13 longVariableNamesRecord;
 
 	public boolean isMetadataLoaded = false;
-
-	// SPSS Data (actual values stored in variables)
+  // SPSS Data (actual values stored in variables)
 	long dataStartPosition = -1;
+
 	public boolean isDataLoaded = false;
 
   /**
@@ -322,6 +325,8 @@ public class SPSSFile extends RandomAccessFile {
 			log(variableDisplayParamsRecord.toString());
 		if (longVariableNamesRecord != null)
 			log(longVariableNamesRecord.toString());
+		if (veryLongStringVariableRecord != null)
+			log(veryLongStringVariableRecord.toString());
 	}
 
 	/**
@@ -1167,6 +1172,7 @@ public class SPSSFile extends RandomAccessFile {
 
 		// Init Type 2 records map (variables) (need "linked" hash map to retain natural order)
 		variableMap = new LinkedHashMap<Integer, SPSSVariable>();
+    variableShortNameMap = new LinkedHashMap<String, SPSSVariable>();
 
 		// Read Type 2 records (at least one)
 		// This was changed from for(int i=0; i < this.infoRecord.OBSperObservation; i++) {
@@ -1323,45 +1329,51 @@ public class SPSSFile extends RandomAccessFile {
 					}
 					break;
 				case 13: // Long variable names
-					longVariableNamesRecord = new SPSSRecordType7Subtype13();
-					longVariableNamesRecord.read(this);
-					log(longVariableNamesRecord.toString());
+          longVariableNamesRecord = new SPSSRecordType7Subtype13();
+          longVariableNamesRecord.read(this);
+          log(longVariableNamesRecord.toString());
 
-					// iterate through all variables and remove the ones that are in the map
-					SPSSVariable currentVar = null;
-					int deletedCount = 0;
-					Iterator it = variableMap.entrySet().iterator();
+          // iterate through all variables and remove the ones that are in the map
+          SPSSVariable currentVar = null;
+          int deletedCount = 0;
+          Iterator it = variableMap.entrySet().iterator();
 
-					while (it.hasNext()) {
-					Map.Entry entry = (Map.Entry)it.next();
-					SPSSVariable var = (SPSSVariable)entry.getValue();
-					String longName = longVariableNamesRecord.nameMap.get(var.getShortName());
-					if (longName != null && !longName.isEmpty()) {
-					  currentVar = var;
-					  var.variableName = longName;
-					  var.variableNumber -= deletedCount;
-					}
-					else {
-					  // this must be a segment variable of a string variable stored in currentVar
-					  if (currentVar instanceof SPSSStringVariable) {
-						((SPSSStringVariable)currentVar).segments.add(var);
-						it.remove();
-						deletedCount++;
-					  }
-					  else {
-						throw new SPSSFileException("Variable " + var.getName() +
-							" is not in the variable dictionary and is not a segment of a string variable.");
-					  }
-					}
-					}
-					break;
-            // NOTE: for now this case is not accounted fot until we learn how to use SPSSRecordType7Subtype14
-            // to stitch long string vatiables. For now, case 13: implements a solution
-//          case 14:
-//            veryLongStringVariableRecord = new SPSSRecordType7Subtype14();
-//            veryLongStringVariableRecord.read(this);
-//            log(veryLongStringVariableRecord.toString());
-//            break;
+          while(it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            SPSSVariable var = (SPSSVariable) entry.getValue();
+            String shortName = var.getShortName();
+            String longName = longVariableNamesRecord.nameMap.get(shortName);
+            if(longName != null && !longName.isEmpty()) {
+              currentVar = var;
+              var.variableName = longName;
+              var.variableNumber -= deletedCount;
+              variableShortNameMap.put(shortName, var);
+            } else {
+              // this must be a segment variable of a string variable stored in currentVar
+              if(currentVar instanceof SPSSStringVariable) {
+                ((SPSSStringVariable) currentVar).segments.add(var);
+                it.remove();
+                deletedCount++;
+              } else {
+                throw new SPSSFileException("Variable " + var.getName() +
+                    " is not in the variable dictionary and is not a segment of a string variable.");
+              }
+            }
+          }
+          break;
+          case 14:
+            veryLongStringVariableRecord = new SPSSRecordType7Subtype14();
+            veryLongStringVariableRecord.read(this);
+            log(veryLongStringVariableRecord.toString());
+
+            // Correct variable lengths
+            for (Map.Entry<String, Integer> entry : veryLongStringVariableRecord.entries()) {
+              SPSSVariable variable = variableShortNameMap.get(entry.getKey());
+              if (variable != null && variable instanceof SPSSStringVariable) {
+                ((SPSSStringVariable)variable).setLength(entry.getValue());
+              }
+            }
+            break;
           case 21: // Long string value labels
             SPSSRecordType7Subtype21 recordType7Subtype21 = new SPSSRecordType7Subtype21();
             recordType7Subtype21.read(this);

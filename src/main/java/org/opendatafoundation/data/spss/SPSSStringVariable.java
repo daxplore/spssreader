@@ -61,6 +61,13 @@ public class SPSSStringVariable extends SPSSVariable {
     return data.size();
   }
 
+  /**
+   * Sets the variable length. This should be used only if the variable has very long value (> 255).
+   */
+  public void setLength(int value) {
+    variableRecord.writeFormatWidth = value;
+  }
+
 	/**
 	 * Adds a category to the variable
 	 */

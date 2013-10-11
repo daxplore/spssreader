@@ -12,6 +12,7 @@ package org.opendatafoundation.data.spss;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -53,29 +54,22 @@ public class SPSSRecordType7Subtype14 extends SPSSAbstractRecordType {
               "]. Expecting Record Subtype 21.");
     }
 
-
     size = is.readSPSSInt();
     count = is.readSPSSInt();
-    String rawMap  = is.readSPSSString(count);
+    String rawMap = is.readSPSSString(count);
 
     StringTokenizer st1 = new StringTokenizer(rawMap, "\t");
-    while (st1.hasMoreTokens()) {
+    while(st1.hasMoreTokens()) {
       StringTokenizer st2 = new StringTokenizer(st1.nextToken(), "=");
-      if (st2.countTokens() >= 2) {
+      if(st2.countTokens() >= 2) {
         stringLengths.put(st2.nextToken(), Integer.parseInt(st2.nextToken().replaceAll("\\u0000", "")));
       }
     }
 
   }
 
-  public int getVariableLength(String name) {
-    if (name != null && !name.isEmpty()) {
-      if (stringLengths.containsKey(name)) {
-        return stringLengths.get(name);
-      }
-    }
-
-    return -1;
+  public Set<Map.Entry<String, Integer>> entries() {
+    return stringLengths.entrySet();
   }
 
   @Override
@@ -85,8 +79,14 @@ public class SPSSRecordType7Subtype14 extends SPSSAbstractRecordType {
         .append("\nLocation              : ").append(fileLocation) //
         .append("\nRecord Type           : ").append(recordTypeCode) //
         .append("\nRecord Subtype        : ").append(recordSubtypeCode) //
-        .append("\nSize         : ").append(size) //
-        .append("\nCount        : ").append(count);
+        .append("\nSize                  : ").append(size) //
+        .append("\nCount                 : ").append(count) //
+        .append("\nString lengths:       ");
+
+
+    for (Map.Entry<String, Integer> entry : stringLengths.entrySet()) {
+      str.append("\t").append(entry);
+    }
 
     return str.toString();
   }
