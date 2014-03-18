@@ -279,4 +279,42 @@ public class SpssFileTest {
 
   }
 
+  @Test
+  public void testSYSMISS() {
+    SPSSFile spssFile = null;
+    try {
+      spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/OV103V2OVERALLv5b.sav"));
+      spssFile.loadMetadata();
+      spssFile.loadData();
+    } catch(Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+  }
+
+  @Test
+  public void testNumericValueFormat() {
+    SPSSFile spssFile = null;
+    try {
+      spssFile = new SPSSFile(new File("src/test/resources/org/opendatafoundation/data/spss/TestNumber.sav"));
+      spssFile.loadMetadata();
+      spssFile.loadData();
+      SPSSVariable variable = spssFile.getVariable(1);
+      assertEquals(variable.getName(), "HEIGHT");
+      assertThat(variable.getValueAsString(1, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("137.34"));
+      assertThat(variable.getValueAsString(2, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("9999.99"));
+      assertThat(variable.getValueAsString(3, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("99.99"));
+      assertThat(variable.getValueAsString(4, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is(""));
+      assertThat(variable.getValueAsString(5, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("12.10"));
+      assertThat(variable.getValueAsString(6, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("12.47"));
+      assertThat(variable.getValueAsString(7, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("123456789.34"));
+
+      SPSSVariable variable1 = spssFile.getVariable(2);
+      assertEquals(variable1.getName(), "WEIGHT");
+      assertThat(variable1.getValueAsString(1, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("1,232.00"));
+      assertThat(variable1.getValueAsString(2, new FileFormatInfo(FileFormatInfo.Format.ASCII)), is("12.00"));
+    } catch(Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+  }
+
 }

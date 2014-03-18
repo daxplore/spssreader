@@ -233,37 +233,14 @@ public class SPSSNumericVariable extends SPSSVariable {
     }
     // init value to convert
     if(obsNumber == 0) val = value;
-    else if(obsNumber > 0 && data.size() == 0) throw new SPSSFileException("No data availble");
+    else if(obsNumber > 0 && data.size() == 0) throw new SPSSFileException("No data available");
     else val = data.get(obsNumber - 1);
 
     // convert
-    strValue = valueToString(val);
+    strValue = valueToString(val).trim();
 
     // format output
-
-    // length
-    if(dataFormat.asciiFormat == FileFormatInfo.ASCIIFormat.FIXED) {
-      // fixed length formats
-      if(strValue.equals(".")) strValue = Utils.leftPad("", this.getLength()); // replace missing values with spaces
-      else if(strValue.length() < getLength()) strValue = Utils.leftPad(strValue, this.getLength()); // left pad
-      else if(strValue.length() > getLength()) { // this value is too long to fit in the allocate space
-        // for fixed format, see if we can truncate the decimals (this is the same for SPSS fixed export)
-        if(variableRecord.writeFormatType == 5 && getDecimals() > 0) {
-          int dotPosition = strValue.lastIndexOf(".");
-          // TODO: when a value is less between 1 and -1 (0.1234), SPSS also removes the leading zero
-          if(dotPosition + 2 <= getLength()) { // we can fit at least one decimal
-            strValue = String
-                .format(Locale.US, "%" + this.getLength() + "." + (this.getLength() - dotPosition - 1) + "f", value);
-          } else if(dotPosition <= getLength()) { // we can fit the non-decimal protion
-            strValue = Utils.leftPad(strValue.substring(1, dotPosition - 1), this.getLength());
-          } else strValue = Utils.leftPad("", getLength(), '*');
-        } else
-          strValue = Utils.leftPad("", getLength(), '*'); // this overflows the allocated width, return a string of '*'
-      }
-    } else {
-      // variable length formats
-      strValue = strValue.trim();
-    }
+    if(strValue.equals(".")) strValue = "";
 
     // some number formats may contain a comma
     if(dataFormat.format == FileFormatInfo.Format.ASCII) {
