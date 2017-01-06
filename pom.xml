@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.opendatafoundation</groupId>
+  <artifactId>spssreader</artifactId>
+  <packaging>jar</packaging>
+  <version>1.2.0</version>
+  <name>spssreader</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+
+    <junit.version>4.9</junit.version>
+  </properties>
+  
+  <scm>
+    <connection>scm:git:git://github.com/obiba/spssreader.git</connection>
+    <developerConnection>scm:git:https://github.com/obiba/spssreader.git</developerConnection>
+    <url>https://github.com/obiba/spssreader</url>
+    <tag>HEAD</tag>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
