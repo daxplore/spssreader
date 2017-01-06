@@ -45,6 +45,34 @@ public class SpssFileTest {
   }
 
   @Test
+  public void testIntervalMissingValues() {
+    try {
+      SPSSFile spssFile = new SPSSFile(
+        new File("src/test/resources/org/opendatafoundation/data/spss/InervalMissing.sav"));
+      spssFile.logFlag = false;
+      spssFile.loadMetadata();
+      SPSSVariable variable0 = spssFile.getVariable(0);
+      assertEquals(variable0.categoryMap.size(), 6);
+      assertEquals(variable0.categoryMap.get("-2").isMissing, true);
+      assertEquals(variable0.categoryMap.get("-1").isMissing, true);
+      assertEquals(variable0.categoryMap.get("1").isMissing, false);
+      assertEquals(variable0.categoryMap.get("2").isMissing, false);
+      assertEquals(variable0.categoryMap.get("3").isMissing, false);
+      assertEquals(variable0.categoryMap.get("9").isMissing, false);
+
+      SPSSVariable variable1 = spssFile.getVariable(1);
+      assertEquals(variable1.categoryMap.size(), 4);
+      variable1.categoryMap.forEach((k, cat) -> assertEquals(cat.isMissing, true));
+
+      SPSSVariable variable2 = spssFile.getVariable(2);
+      assertEquals(variable2.categoryMap.size(), 0);
+
+    } catch(Exception e) {
+      Assert.fail();
+    }
+  }
+
+  @Test
   public void testReadingStringVariableLabels() {
     try {
       SPSSFile spssFile = new SPSSFile(

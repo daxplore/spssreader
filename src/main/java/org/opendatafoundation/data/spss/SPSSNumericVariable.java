@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.opendatafoundation.data.FileFormatInfo;
-import org.opendatafoundation.data.Utils;
 
 /**
  * SPSS numeric variable
@@ -67,6 +66,24 @@ public class SPSSNumericVariable extends SPSSVariable {
 
   public double mean_wgt = 0.0;
 
+  public MissingInterval missingInterval;
+
+  public static class MissingInterval {
+
+    private final double from;
+    private final double to;
+
+    public MissingInterval(double f, double t) {
+      from = f;
+      to = t;
+    }
+
+    public boolean isInInterval(double value) {
+      return value >= from && value <= to;
+    }
+
+  }
+
   /**
    * Class constructor
    */
@@ -92,6 +109,24 @@ public class SPSSNumericVariable extends SPSSVariable {
   public SPSSVariableCategory addCategory(byte[] byteValue, String label) throws SPSSFileException {
     double value = SPSSUtils.byte8ToDouble(byteValue);
     return (addCategory(value, label));
+  }
+
+  /**
+   * Adds a from-to missing interval
+   * @param from
+   * @param to
+   */
+  public void addMissingInterval(double from, double to) {
+    missingInterval = new MissingInterval(from, to);
+  }
+
+  /**
+   * Test if category value is bounded
+   * @param value
+   * @return
+   */
+  public boolean isInMissingInterval(double value) {
+    return missingInterval != null && missingInterval.isInInterval(value);
   }
 
   /**

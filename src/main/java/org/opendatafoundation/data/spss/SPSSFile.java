@@ -1284,10 +1284,8 @@ public class SPSSFile extends RandomAccessFile {
           // Note2: We assume that the range ius made of integral values and increments by 1!!
           int from = (int) SPSSUtils.byte8ToDouble(type2Record.missingValue[0]);
           int to = (int) SPSSUtils.byte8ToDouble(type2Record.missingValue[1]);
-          for(int j = from; j <= to; j++) {
-            SPSSVariableCategory cat = ((SPSSNumericVariable) var).addCategory((double) j, "");
-            cat.isMissing = true;
-          }
+          ((SPSSNumericVariable) var).addMissingInterval(from, to);
+
           if(type2Record.missingValueFormatCode == -3) {
             // -3 --> an extra discrete value is also specified
             SPSSVariableCategory cat = var.addCategory(type2Record.missingValue[2], "");
@@ -1339,6 +1337,9 @@ public class SPSSFile extends RandomAccessFile {
             while(catIterator.hasNext()) {
               byte[] key = (byte[]) catIterator.next();
               SPSSVariableCategory cat = var.addCategory(key, record3.valueLabel.get(key));
+              if (var instanceof SPSSNumericVariable) {
+                cat.isMissing = ((SPSSNumericVariable)var).isInMissingInterval(cat.value);
+              }
             }
           }
           break;
